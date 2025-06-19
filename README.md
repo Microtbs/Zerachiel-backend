@@ -6,8 +6,6 @@
   - [TypeORM](#typeorm)
 - [Database](#database)
   - [PostgreSQL](#postgresql)
-- [Frontend](#frontend)
-  - [React](#react)
 - [Uso](#uso)
   - [Setup progetto](#setup-progetto)
   - [NestJS – Avvio progetto](#nestjs--avvio-progetto)
@@ -31,22 +29,16 @@
 
 ## Backend
 
-### <p align="center"><img src="https://nestjs.com/img/logo-small.svg" width="60" alt="NestJS" /> </p>
+### <p align="center"><a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="80" alt="NestJS" /></a></p>
  > NestJS segue il pattern MVC e incoraggia la separazione delle responsabilità. Supporta micro‑servizi, REST, GraphQL e WebSocket, fornendo un potente sistema di dependency‑injection e tooling CLI per scaffolding. 
 
-### <p align="center"><img src="https://images.seeklogo.com/logo-png/44/1/typeorm-logo-png_seeklogo-443592.png" width="60" alt="TypeORM" />  </p>
+### <p align="center"><a href="https://typeorm.io/" target="blank">TypeORM</a></p>
  > TypeORM gestisce la persistenza dei dati su PostgreSQL attraverso un approccio DataMapper/ActiveRecord, migrazioni automatiche e query builder tipizzato. 
 
 ## Database
 
-### <p align="center"><img src="https://www.vectorlogo.zone/logos/postgresql/postgresql-ar21.svg" width="60" alt="PostgreSQL" /> </p>
+### <p align="center"><a href="https://www.postgresql.org/" target="blank">PostgreSQL </p>
 > PostgreSQL è un database relazionale open‑source ACID‑compliant. Utilizzato per la persistenza dei dati delle tombe, dei lotti e degli utenti, con estensioni geospaziali (PostGIS) per la gestione delle coordinate all’interno del cimitero.
-
-## Frontend
-
-
-### <p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="60" alt="React" /></p>
-> React per la costruzione di interfacce utente basata su componenti. Integrata con React Router per il routing lato client e con librerie di mapping (Leaflet/Mapbox GL) per la mappa interattiva. 
 
 ## Uso
 
