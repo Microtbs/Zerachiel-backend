@@ -32,5 +32,4 @@ export class UpdateUserDto {
     @IsNotEmpty()
     @IsBoolean()
     family_member: Boolean;
-
 }
