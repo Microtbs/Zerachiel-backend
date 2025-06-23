@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
-import { MucipalityContactsService } from './mucipality_contacts.service';
+import { MunicipalityContactsService } from './municipality_contacts.service';
 import { CreateMunicipalityContactDto } from './dto/create-municipality_contact.dto';
 import { UpdateMunicipalityContactDto } from './dto/update-municipality_contact.dto';
 
 @Controller('municipality-contacts')
 export class MunicipalityContactsController {
-    constructor(private readonly municipality_contactServices: MucipalityContactsService) { }
+    constructor(private readonly municipality_contactServices: MunicipalityContactsService) { }
 
     @Post()
     create(@Body() createMunicipalityContactDto: CreateMunicipalityContactDto) {

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormConfig } from './configs/ormconfig';
 
 import { UsersModule } from './modules/users/users.module';
+import { MunicipalityContactsModule } from './modules/municipality_contacts/municipality_contacts.module';
 
 
 
@@ -15,7 +16,8 @@ import { UsersModule } from './modules/users/users.module';
       useFactory: () => ormConfig, // Usa la configurazione definita in ormconfig.ts
     }),
     // Importa qui i tuoi Moduli
-    UsersModule
+    UsersModule,
+    MunicipalityContactsModule
   ],
 })
 export class AppModule { }

@@ -6,7 +6,7 @@ import { CreateMunicipalityContactDto } from './dto/create-municipality_contact.
 import { UpdateMunicipalityContactDto } from './dto/update-municipality_contact.dto';
 
 @Injectable()
-export class MucipalityContactsService {
+export class MunicipalityContactsService {
     constructor(@InjectRepository(MunicipalityContact) private readonly repo: Repository<MunicipalityContact>) { }
 
     create(createMunicipalityContactDto: CreateMunicipalityContactDto): Promise<MunicipalityContact> {
