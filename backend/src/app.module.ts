@@ -6,6 +6,7 @@ import { ormConfig } from './configs/ormconfig';
 
 import { UsersModule } from './modules/users/users.module';
 import { MunicipalityContactsModule } from './modules/municipality_contacts/municipality_contacts.module';
+import { DeceasedModule } from './modules/deceased/deceased.module'
 
 
 
@@ -17,7 +18,8 @@ import { MunicipalityContactsModule } from './modules/municipality_contacts/muni
     }),
     // Importa qui i tuoi Moduli
     UsersModule,
-    MunicipalityContactsModule
+    MunicipalityContactsModule,
+    DeceasedModule
   ],
 })
 export class AppModule { }
