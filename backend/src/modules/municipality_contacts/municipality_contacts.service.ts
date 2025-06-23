@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MunicipalityContact } from './entities/mucipality_contacts.entity';
+import { MunicipalityContact } from './entities/municipality_contacts.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateMunicipalityContactDto } from './dto/create-municipality_contact.dto';
 import { UpdateMunicipalityContactDto } from './dto/update-municipality_contact.dto';
