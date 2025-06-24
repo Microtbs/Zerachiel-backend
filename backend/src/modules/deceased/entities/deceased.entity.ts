@@ -1,5 +1,6 @@
 
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from "typeorm";
+import { Grave } from "src/modules/graves/entities/graves.entity";
 
 @Entity('deceased')
 
@@ -21,5 +22,8 @@ export class Deceased {
 
     /* @Column()
      grave_id: number;*/
+
+    @ManyToOne(() => Grave, (graves) => graves.deceased { onDelete: 'SET NULL', nullable: true })
+    grave: Grave[];
 
 }
