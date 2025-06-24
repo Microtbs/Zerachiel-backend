@@ -22,5 +22,5 @@ export class UpdateDeceasedDto {
 
     @IsOptional()
     @IsNumber()
-    grave_id: boolean;
+    grave_id: number;
 }

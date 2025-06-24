@@ -3,26 +3,26 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @IsString()
-    first_name: String;
+    first_name: string;
 
     @IsNotEmpty()
     @IsString()
-    last_name: String;
+    last_name: string;
 
     @IsNotEmpty()
     @IsEmail()
-    email: String;
+    email: string;
 
     @IsNotEmpty()
     @IsString()
-    tax_code: String;
+    tax_code: string;
 
     @IsNotEmpty()
     @IsString()
-    password: String;
+    password: string;
 
     @IsNotEmpty()
     @IsBoolean()
-    family_member: Boolean;
+    family_member: boolean;
 
 }

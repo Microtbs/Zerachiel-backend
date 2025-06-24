@@ -20,10 +20,10 @@ export class Deceased {
     @Column()
     dod: Date;
 
-    /* @Column()
-     grave_id: number;*/
+    @Column()
+    grave_id: number;
 
-    @ManyToOne(() => Grave, (graves) => graves.deceased { onDelete: 'SET NULL', nullable: true })
+    @ManyToOne(() => Grave, (graves) => graves.id, { onDelete: 'SET NULL', nullable: true })
     grave: Grave[];
 
 }

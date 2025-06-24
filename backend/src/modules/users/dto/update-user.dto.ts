@@ -6,30 +6,30 @@ export class UpdateUserDto {
     @IsOptional()
     @IsNotEmpty()
     @IsString()
-    first_name: String;
+    first_name: string;
 
     @IsOptional()
     @IsNotEmpty()
     @IsString()
-    last_name: String;
+    last_name: string;
 
     @IsOptional()
     @IsNotEmpty()
     @IsEmail()
-    email: String;
+    email: string;
 
     @IsOptional()
     @IsNotEmpty()
     @IsString()
-    tax_code: String;
+    tax_code: string;
 
     @IsOptional()
     @IsNotEmpty()
     @IsString()
-    password: String;
+    password: string;
 
     @IsOptional()
     @IsNotEmpty()
     @IsBoolean()
-    family_member: Boolean;
+    family_member: boolean;
 }
