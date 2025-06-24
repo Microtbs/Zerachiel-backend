@@ -7,6 +7,8 @@ import { ormConfig } from './configs/ormconfig';
 import { UsersModule } from './modules/users/users.module';
 import { MunicipalityContactsModule } from './modules/municipality_contacts/municipality_contacts.module';
 import { DeceasedModule } from './modules/deceased/deceased.module'
+import { GravesModule } from './modules/graves/graves.module';
+import { CaretakersModule } from './modules/caretakers/caretakers.module';
 
 
 
@@ -17,6 +19,8 @@ import { DeceasedModule } from './modules/deceased/deceased.module'
       useFactory: () => ormConfig, // Usa la configurazione definita in ormconfig.ts
     }),
     // Importa qui i tuoi Moduli
+    GravesModule,
+    CaretakersModule,
     UsersModule,
     MunicipalityContactsModule,
     DeceasedModule

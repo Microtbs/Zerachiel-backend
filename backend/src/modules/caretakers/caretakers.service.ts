@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from "@nestjs/typeorm";
+import { DeleteResult, Repository } from "typeorm";
 import { CreateCaretakerDto } from './dto/create-caretaker.dto';
 import { UpdateCaretakerDto } from './dto/update-caretaker.dto';
+import { Caretaker } from './entities/caretakers.entity';
 
 @Injectable()
 export class CaretakersService {
-  create(createCaretakerDto: CreateCaretakerDto) {
-    return 'This action adds a new caretaker';
+  constructor(@InjectRepository(Caretaker) private readonly repo: Repository<Caretaker>) { }
+
+  create(createCaretakerDto: CreateCaretakerDto): Promise<Caretaker> {
+    const Caretaker = this.repo.create(createCaretakerDto);
+    return this.repo.save(Caretaker);
   }
 
-  findAll() {
-    return `This action returns all caretakers`;
+  findAll(): Promise<Caretaker[]> {
+    return this.repo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} caretaker`;
+  async findOne(id: number): Promise<Caretaker> {
+    const Caretaker = await this.repo.findOneBy({ id });
+    if (!Caretaker) throw new NotFoundException('Caretaker not found');
+    return Caretaker;
   }
 
-  update(id: number, updateCaretakerDto: UpdateCaretakerDto) {
-    return `This action updates a #${id} caretaker`;
+  async update(id: number, updateCaretakerDto: UpdateCaretakerDto): Promise<Caretaker> {
+    const Caretaker = await this.repo.findOneBy({ id });
+    if (!Caretaker) throw new NotFoundException('Caretaker not found');
+    return this.repo.save({ id, ...updateCaretakerDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} caretaker`;
+  async remove(id: number): Promise<DeleteResult> {
+    const Caretaker = await this.repo.findOneBy({ id });
+    if (!Caretaker) throw new NotFoundException('Caretaker not found');
+    return this.repo.delete(id);
   }
 }

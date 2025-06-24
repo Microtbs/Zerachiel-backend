@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { Caretaker } from "src/modules/caretakers/entities/caretakers.entity";
 
 
@@ -30,4 +30,5 @@ export class Grave {
 
     @ManyToOne(() => Caretaker, (caretakers) => caretakers.graves, { onDelete: 'SET NULL', nullable: true })
     caretakers: Caretaker;
+
 }
