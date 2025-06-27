@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
-import { DigitalFlowersService } from './digital-flowers.service';
-import { CreateDigitalFlowersDto } from './dto/create.digitalflowers.dto';
-import { UpdateDigitalFlowersDto } from './dto/update.digitalflowers.dto';
+import { DigitalFlowersService } from './digital_flowers.service';
+import { CreateDigitalFlowersDto } from './dto/create-digital_flowers.dto';
+import { UpdateDigitalFlowersDto } from './dto/update-digital_flowers.dto';
 
 @Controller('digitalflowers')
 export class DigitalFlowersController {

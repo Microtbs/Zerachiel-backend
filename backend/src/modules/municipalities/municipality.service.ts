@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Municipalities } from './entities/municipalities.entity';
 import { MunicipalitiesController } from './municipality.controller';
-import { CreateMunicipalityDto } from './dto/create.municipality.dto';
-import { UpdateMunicipalityDto } from './dto/update.municipality.dto';
+import { CreateMunicipalityDto } from './dto/create-municipality.dto';
+import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
 
 @Injectable()
 export class MunicipalitiesService {

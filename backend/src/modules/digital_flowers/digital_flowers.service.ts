@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DigitalFlowers } from './entities/digital-flowers.entity';
-import { CreateDigitalFlowersDto } from './dto/create.digitalflowers.dto';
-import { UpdateDigitalFlowersDto } from './dto/update.digitalflowers.dto';
+import { DigitalFlowers } from './entities/digital_flowers.entity';
+import { CreateDigitalFlowersDto } from './dto/create-digital_flowers.dto';
+import { UpdateDigitalFlowersDto } from './dto/update-digital_flowers.dto';
 
 @Injectable()
 export class DigitalFlowersService {
