@@ -23,9 +23,9 @@ export class RequestOfficesService {
   ) {}
 
   /**
-   * Trova un ufficio richieste per ID.
-   * @param id - ID dell'ufficio richieste da trovare.
-   * @returns L'ufficio richieste trovato.
+   * Trova un municipio per ID.
+   * @param id - ID del municipio da trovare.
+   * @returns Il municipio trovato.
    * */
   private async findMunicipalityBy(id: number): Promise<Municipalities> {
     const municipality = await this.municipalitiesRepository.findOne({
@@ -39,8 +39,8 @@ export class RequestOfficesService {
 
   /**
    * Trova una tomba per ID.
-   * @param id - ID dell'ufficio richieste da trovare.
-   * @returns L'ufficio richieste trovato.
+   * @param id - ID della tomba da trovare.
+   * @returns La tomba trovata.
    */
   private async findGraveBy(id: number): Promise<Grave> {
     const grave = await this.graveRepository.findOne({
@@ -58,11 +58,11 @@ export class RequestOfficesService {
   async create(
     createRequestOfficeDto: CreateRequestOfficeDto,
   ): Promise<RequestOffice> {
-    const grave = await this.findGraveBy(createRequestOfficeDto.grave_id); // Trovare l'utente associato tramite un metodo private
+    const grave = await this.findGraveBy(createRequestOfficeDto.grave_id); // Trovare la tomba associata tramite un metodo private
 
     const municipality = await this.findMunicipalityBy(
       createRequestOfficeDto.municipality_id,
-    ); // Trovare l'ufficio richieste associato tramite un metodo private
+    ); // Trovare il municipio associato tramite un metodo private
 
     const requestOffice = this.requestOfficeRepository.create({
       requests_processed: createRequestOfficeDto.requests_processed,
@@ -98,16 +98,12 @@ export class RequestOfficesService {
   ): Promise<RequestOffice> {
     const office = await this.findOne(id);
 
-    // Se l'ID dell'utente è fornito, trova l'utente e aggiorna la richiesta
-    // updateRequestDto.userId ? (request.user = await this.findUserBy(updateRequestDto.userId)) : null;
-
+    // Se l'ID della tomba è fornito, aggiorna la tomba associata
     if (updateRequestOfficeDto.grave_id) {
       office.grave = await this.findGraveBy(updateRequestOfficeDto.grave_id);
     }
 
-    // Se l'ID dell'ufficio richieste è fornito, trova l'ufficio richieste e aggiorna la richiesta
-    // updateRequestDto.requestOfficeId? (request.requestOffice = await this.findRequestOfficeBy(updateRequestDto.requestOfficeId)) : null;
-
+    // Se l'ID del municipio è fornito, aggiorna il municipio associato
     if (updateRequestOfficeDto.municipality_id) {
       office.municipality = await this.findMunicipalityBy(
         updateRequestOfficeDto.municipality_id,

@@ -8,6 +8,7 @@ export class CreateRequestOfficeDto {
   @IsInt()
   @IsNotEmpty()
   grave_id: number;
+  // -- FIX : Questa relazione dovrebbe essere "opzionale" OneToMany, ma nel database viene specificata una relazione ManyToOne -> Includere request_offices_id nella tabella 'graves' per evitare errori di relazione
 
   @IsInt()
   @IsNotEmpty()

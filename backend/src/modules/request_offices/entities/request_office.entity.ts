@@ -21,18 +21,19 @@ export class RequestOffice {
   requests_processed: boolean;
 
   @ManyToOne(() => Grave, {
-    eager: true, // Carica l'utente associato quando si carica la richiesta
-    nullable: false, // L'utente non può essere nullo
-    onDelete: 'CASCADE', // Se l'utente viene eliminato, le richieste associate vengono eliminate
+    eager: true, // Carica le tombe associate quando si carica l'ufficio richieste
+    nullable: false, // La tomba non può essere nulla
+    onDelete: 'CASCADE', // Se la tomba viene eliminato, associate vengono eliminate
   })
-  @JoinColumn({ name: 'grave_id' }) // nome della colonna di join nella tabella 'requests'
+  @JoinColumn({ name: 'grave_id' }) // nome della colonna di join nella tabella 'graves'
   grave: Grave;
+  // -- FIX : Questa relazione dovrebbe essere "opzionale" OneToMany, ma nel database viene specificata una relazione ManyToOne -> Includere request_offices_id nella tabella 'graves' per evitare errori di relazione
 
   @ManyToOne(() => Municipalities, {
-    eager: true, // Carica l'utente associato quando si carica la richiesta
-    nullable: false, // L'utente non può essere nullo
-    onDelete: 'CASCADE', // Se l'utente viene eliminato, le richieste associate vengono eliminate
+    eager: true, // Carica il municipio associato quando si carica l'ufficio richieste
+    nullable: false, // Il municipio non può essere nullo
+    onDelete: 'CASCADE', // Se il municipio viene eliminato, gli uffici richieste associate vengono eliminate
   })
-  @JoinColumn({ name: 'municipality_id' }) // nome della colonna di join nella tabella 'requests'
-  municipality: Municipalities; // Mezz'ora di preghiere per capire e necesita di un bel rename :) -- TODO : Municipality -> Municipalities && municipalities.entity -> municipality.entity
+  @JoinColumn({ name: 'municipality_id' }) // nome della colonna di join nella tabella 'municipalities'
+  municipality: Municipalities; // Mezz'ora di preghiere per capire e necessita di un bel rename :) -- TODO : Municipality -> Municipalities && municipalities.entity -> municipality.entity
 }
