@@ -1,17 +1,4 @@
-import { IsString, IsEmail , IsOptional} from 'class-validator';
-export class UpdateMunicipalityContactDto {
-    @IsOptional()
-    @IsEmail()
-    email: string;
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateMunicipalityContactDto } from './create-municipality_contact.dto';
 
-    @IsOptional()
-    @IsString()
-    telephone: string;
-
-    @IsOptional()
-    @IsEmail()
-    pec: string;
-
-    @IsOptional()
-    municipality_id: number;
-}
+export class UpdateMunicipalityContactDto extends PartialType(CreateMunicipalityContactDto) {}
