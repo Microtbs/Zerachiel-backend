@@ -11,8 +11,8 @@ import { GravesModule } from './modules/graves/graves.module';
 import { CaretakersModule } from './modules/caretakers/caretakers.module';
 import { DigitalFlowersModule } from './modules/digital_flowers/digital_flowers.module';
 import { MunicipalityModule } from './modules/municipalities/municipality.module';
-
-import { RequestOfficesModule } from './modules/request_offices/request_offices.module'; // Importa il modulo degli uffici richieste
+import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
+import { RequestsModule } from './modules/requests/requests.module';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { RequestOfficesModule } from './modules/request_offices/request_offices.
     MunicipalityModule,
     DigitalFlowersModule,
     RequestOfficesModule,
+    RequestsModule,
   ],
 })
 export class AppModule {}
-
