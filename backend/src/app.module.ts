@@ -13,6 +13,7 @@ import { DigitalFlowersModule } from './modules/digital_flowers/digital_flowers.
 import { MunicipalityModule } from './modules/municipalities/municipality.module';
 import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
 import { RequestsModule } from './modules/requests/requests.module';
+import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RequestsModule } from './modules/requests/requests.module';
     DigitalFlowersModule,
     RequestOfficesModule,
     RequestsModule,
+    FeedbacksModule,
   ],
 })
 export class AppModule {}
