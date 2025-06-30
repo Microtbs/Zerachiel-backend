@@ -1,5 +1,5 @@
 import { MunicipalityContact } from 'src/modules/municipality_contacts/entities/municipality_contacts.entity';
-import { Entity, Column, PrimaryGeneratedColumn,OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,OneToMany, OneToOne } from 'typeorm';
 
 @Entity()
 export class Municipalities {
@@ -9,6 +9,6 @@ export class Municipalities {
   @Column()
   name: string;
 
-  @OneToMany(() => MunicipalityContact, (municipality_contacts) => municipality_contacts.id)
-  municipality_conctats: MunicipalityContact[];
+  @OneToOne(() => MunicipalityContact, (municipality_contacts) => municipality_contacts.id)
+  municipality_contacts: MunicipalityContact;
 }

@@ -18,13 +18,14 @@ export class DigitalFlowers {
   
   @Column ({ type: 'int' })
   grave_id: number;
+
   @ManyToOne(() => User, (user) => user.id, {  })
       @JoinColumn ({name : "user_id" })
 
   user: User;
 //eager: true
   @ManyToOne(() => Grave, (grave) => grave.id, {  })
-    @JoinColumn ({name : "grave_id" })
+      @JoinColumn ({name : "grave_id" })
 
   grave: Grave;
 }
