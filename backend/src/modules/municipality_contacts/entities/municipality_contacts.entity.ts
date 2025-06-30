@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import { Municipalities } from "src/modules/municipalities/entities/municipalities.entity";
+import { PrimaryGeneratedColumn, Column, Entity, OneToOne, JoinColumn } from "typeorm";
 
 @Entity('municipality_contacts')
 
@@ -10,11 +11,12 @@ export class MunicipalityContact {
     email: string;
 
     @Column()
-    tel: string;
+    telephone: string;
 
     @Column()
     pec: string;
 
-    @Column()
-    municipality_id: number;
+    @OneToOne(() => Municipalities, (municipality) => municipality.municipality_contacts)
+    @JoinColumn({ name: 'municipality_id' })
+    municipality: Municipalities;
 }
