@@ -19,6 +19,12 @@ export class UsersService {
     return this.repo.find();
   }
 
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.repo.findOne({ where: { email } });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
   async findOne(id: number): Promise<User> {
     const user = await this.repo.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
@@ -37,4 +43,3 @@ export class UsersService {
     return this.repo.delete(id);
   }
 }
-

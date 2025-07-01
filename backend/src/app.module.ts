@@ -14,6 +14,7 @@ import { MunicipalityModule } from './modules/municipalities/municipality.module
 import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
 import { RequestsModule } from './modules/requests/requests.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
     RequestOfficesModule,
     RequestsModule,
     FeedbacksModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
