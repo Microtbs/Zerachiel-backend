@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Caretaker } from 'src/modules/caretakers/entities/caretakers.entity';
+import { RequestOffice } from '../../request_offices/entities/request_office.entity';
 
 @Entity('graves')
 export class Grave {
@@ -36,5 +37,12 @@ export class Grave {
   })
   @JoinColumn({ name: 'caretaker_id' }) // nome della colonna di join nella tabella 'graves'
   caretakers: Caretaker;
-}
 
+  @ManyToOne(() => RequestOffice, {
+    eager: true, // Carica gli uffici richieste associati quando si carica la tomba associati
+    nullable: true, // L'ufficio richieste può essere nulla
+    onDelete: 'CASCADE', // Se l'ufficio richieste viene eliminato, le tombe associate vengono eliminate
+  })
+  @JoinColumn({ name: 'request_office_id' }) // nome della colonna di join nella tabella 'graves'
+  requestoffice: RequestOffice;
+}

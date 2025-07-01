@@ -5,7 +5,6 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Grave } from '../../graves/entities/graves.entity';
 import { Municipalities } from '../../municipalities/entities/municipalities.entity';
 
 /**
@@ -19,15 +18,6 @@ export class RequestOffice {
 
   @Column({ type: 'boolean', default: false })
   requests_processed: boolean;
-
-  @ManyToOne(() => Grave, {
-    eager: true, // Carica le tombe associate quando si carica l'ufficio richieste
-    nullable: false, // La tomba non può essere nulla
-    onDelete: 'CASCADE', // Se la tomba viene eliminato, associate vengono eliminate
-  })
-  @JoinColumn({ name: 'grave_id' }) // nome della colonna di join nella tabella 'graves'
-  grave: Grave;
-  // -- FIX : Questa relazione dovrebbe essere "opzionale" OneToMany, ma nel database viene specificata una relazione ManyToOne -> Includere request_offices_id nella tabella 'graves' per evitare errori di relazione
 
   @ManyToOne(() => Municipalities, {
     eager: true, // Carica il municipio associato quando si carica l'ufficio richieste

@@ -6,7 +6,6 @@ import { RequestOffice } from './entities/request_office.entity';
 import { CreateRequestOfficeDto } from './dto/create-request_office.dto';
 import { UpdateRequestOfficeDto } from './dto/update-request_office.dto';
 
-import { Grave } from '../graves/entities/graves.entity';
 import { Municipalities } from '../municipalities/entities/municipalities.entity';
 
 @Injectable()
@@ -14,9 +13,6 @@ export class RequestOfficesService {
   constructor(
     @InjectRepository(RequestOffice)
     private readonly requestOfficeRepository: Repository<RequestOffice>,
-
-    @InjectRepository(Grave)
-    private readonly graveRepository: Repository<Grave>,
 
     @InjectRepository(Municipalities)
     private readonly municipalitiesRepository: Repository<Municipalities>,
@@ -38,19 +34,6 @@ export class RequestOfficesService {
   }
 
   /**
-   * Trova una tomba per ID.
-   * @param id - ID della tomba da trovare.
-   * @returns La tomba trovata.
-   */
-  private async findGraveBy(id: number): Promise<Grave> {
-    const grave = await this.graveRepository.findOne({
-      where: { id: id },
-    });
-    if (!grave) throw new NotFoundException('Ops... Tomba non trovata :(');
-    return grave;
-  }
-
-  /**
    * Crea una nuova richiesta associata a un ufficio richieste e a una tomba.
    * @param createRequestOfficeDto - Dati dell'ufficio richieste da creare.
    * @returns L'ufficio richieste creato.
@@ -58,15 +41,12 @@ export class RequestOfficesService {
   async create(
     createRequestOfficeDto: CreateRequestOfficeDto,
   ): Promise<RequestOffice> {
-    const grave = await this.findGraveBy(createRequestOfficeDto.grave_id); // Trovare la tomba associata tramite un metodo private
-
     const municipality = await this.findMunicipalityBy(
       createRequestOfficeDto.municipality_id,
     ); // Trovare il municipio associato tramite un metodo private
 
     const requestOffice = this.requestOfficeRepository.create({
       requests_processed: createRequestOfficeDto.requests_processed,
-      grave,
       municipality,
     });
 
@@ -80,7 +60,7 @@ export class RequestOfficesService {
   async findOne(id: number): Promise<RequestOffice> {
     const office = await this.requestOfficeRepository.findOne({
       where: { id },
-      relations: ['municipality', 'grave'], // Ti mostra anche le relazioni
+      relations: ['municipality'], // Ti mostra anche le relazioni
     });
     if (!office) throw new NotFoundException('Ops... Richiesta non trovata :(');
     return office;
@@ -97,11 +77,6 @@ export class RequestOfficesService {
     updateRequestOfficeDto: UpdateRequestOfficeDto,
   ): Promise<RequestOffice> {
     const office = await this.findOne(id);
-
-    // Se l'ID della tomba è fornito, aggiorna la tomba associata
-    if (updateRequestOfficeDto.grave_id) {
-      office.grave = await this.findGraveBy(updateRequestOfficeDto.grave_id);
-    }
 
     // Se l'ID del municipio è fornito, aggiorna il municipio associato
     if (updateRequestOfficeDto.municipality_id) {
