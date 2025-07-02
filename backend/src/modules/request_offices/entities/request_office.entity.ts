@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Municipalities } from '../../municipalities/entities/municipalities.entity';
+import { Municipality } from '../../municipalities/entities/municipality.entity';
 
 /**
  * Entità che rappresenta un ufficio richieste.
@@ -19,11 +19,11 @@ export class RequestOffice {
   @Column({ type: 'boolean', default: false })
   requests_processed: boolean;
 
-  @ManyToOne(() => Municipalities, {
+  @ManyToOne(() => Municipality, {
     eager: true, // Carica il municipio associato quando si carica l'ufficio richieste
     nullable: false, // Il municipio non può essere nullo
     onDelete: 'CASCADE', // Se il municipio viene eliminato, gli uffici richieste associate vengono eliminate
   })
   @JoinColumn({ name: 'municipality_id' }) // nome della colonna di join nella tabella 'municipalities'
-  municipality: Municipalities; // Mezz'ora di preghiere per capire e necessita di un bel rename :) -- TODO : Municipality -> Municipalities && municipalities.entity -> municipality.entity
+  municipality: Municipality; // Mezz'ora di preghiere per capire e necessita di un bel rename :) -- TODO : Municipality -> Municipalities && municipalities.entity -> municipality.entity
 }

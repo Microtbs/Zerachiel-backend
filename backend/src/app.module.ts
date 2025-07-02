@@ -10,7 +10,7 @@ import { DeceasedModule } from './modules/deceased/deceased.module';
 import { GravesModule } from './modules/graves/graves.module';
 import { CaretakersModule } from './modules/caretakers/caretakers.module';
 import { DigitalFlowersModule } from './modules/digital_flowers/digital_flowers.module';
-import { MunicipalityModule } from './modules/municipalities/municipality.module';
+import { MunicipalitiesModule } from './modules/municipalities/municipalities.module';
 import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
 import { RequestsModule } from './modules/requests/requests.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
@@ -29,7 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
     UsersModule,
     MunicipalityContactsModule,
     DeceasedModule,
-    MunicipalityModule,
+    MunicipalitiesModule,
     DigitalFlowersModule,
     RequestOfficesModule,
     RequestsModule,

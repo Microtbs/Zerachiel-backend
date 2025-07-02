@@ -6,7 +6,7 @@ import { RequestOffice } from './entities/request_office.entity';
 import { CreateRequestOfficeDto } from './dto/create-request_office.dto';
 import { UpdateRequestOfficeDto } from './dto/update-request_office.dto';
 
-import { Municipalities } from '../municipalities/entities/municipalities.entity';
+import { Municipality } from '../municipalities/entities/municipality.entity';
 
 @Injectable()
 export class RequestOfficesService {
@@ -14,8 +14,8 @@ export class RequestOfficesService {
     @InjectRepository(RequestOffice)
     private readonly requestOfficeRepository: Repository<RequestOffice>,
 
-    @InjectRepository(Municipalities)
-    private readonly municipalitiesRepository: Repository<Municipalities>,
+    @InjectRepository(Municipality)
+    private readonly municipalitiesRepository: Repository<Municipality>,
   ) {}
 
   /**
@@ -23,7 +23,7 @@ export class RequestOfficesService {
    * @param id - ID del municipio da trovare.
    * @returns Il municipio trovato.
    * */
-  private async findMunicipalityBy(id: number): Promise<Municipalities> {
+  private async findMunicipalityBy(id: number): Promise<Municipality> {
     const municipality = await this.municipalitiesRepository.findOne({
       where: { id: id },
     });
