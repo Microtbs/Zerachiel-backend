@@ -1,29 +1,29 @@
-
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from "typeorm";
-import { Grave } from "src/modules/graves/entities/graves.entity";
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from 'typeorm';
+import { Grave } from '../../graves/entities/graves.entity';
 
 @Entity('deceased')
-
 export class Deceased {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    first_name: string;
+  @Column()
+  first_name: string;
 
-    @Column()
-    last_name: string;
+  @Column()
+  last_name: string;
 
-    @Column()
-    dob: Date;
+  @Column()
+  dob: Date;
 
-    @Column()
-    dod: Date;
+  @Column()
+  dod: Date;
 
-    @Column()
-    grave_id: number;
+  @Column()
+  grave_id: number;
 
-    @ManyToOne(() => Grave, (graves) => graves.id, { onDelete: 'SET NULL', nullable: true })
-    grave: Grave[];
-
+  @ManyToOne(() => Grave, (graves) => graves.id, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  grave: Grave[];
 }

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Caretaker } from 'src/modules/caretakers/entities/caretakers.entity';
+import { Caretaker } from '../../caretakers/entities/caretakers.entity';
 import { RequestOffice } from '../../request_offices/entities/request_office.entity';
 
 @Entity('graves')

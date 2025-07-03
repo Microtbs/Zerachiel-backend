@@ -1,4 +1,4 @@
-import { Municipality } from 'src/modules/municipalities/entities/municipality.entity';
+import { Municipality } from '../../municipalities/entities/municipality.entity';
 import {
   PrimaryGeneratedColumn,
   Column,

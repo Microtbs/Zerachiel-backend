@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { RequestOffice } from '../../request_offices/entities/request_office.entity'; // TODO :Fare Entità
+import { RequestOffice } from '../../request_offices/entities/request_office.entity';
 
 @Entity('requests')
 export class Request {
