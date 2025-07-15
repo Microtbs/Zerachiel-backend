@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './jwt.strategy';
-import { jwtConfig } from 'src/configs/jwtconfig';
+import { jwtConfig } from '../..//configs/jwtconfig';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { jwtConfig } from 'src/configs/jwtconfig';
     PassportModule,
     JwtModule.register({
       secret: jwtConfig.secret,
-      signOptions: { expiresIn: jwtConfig.expiresIn }, 
+      signOptions: { expiresIn: jwtConfig.expiresIn },
     }),
   ],
   controllers: [AuthController],
