@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { first } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -38,15 +39,16 @@ export class AuthService {
     const isValid = await bcrypt.compare(dto.password, user.password);
     if (!isValid) throw new UnauthorizedException('Credenziali errate');
 
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-      id: user.id,
+    const payload = {
+      sub: user.id,
+      email: user.email,
       first_name: user.first_name,
       last_name: user.last_name,
-      email: user.email,
-      tax_code: user.tax_code,
       family_member: user.family_member,
+      tax_code: user.tax_code,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
     };
   }
 }
