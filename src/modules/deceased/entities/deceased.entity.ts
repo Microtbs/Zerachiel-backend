@@ -1,4 +1,10 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Grave } from '../../graves/entities/graves.entity';
 
 @Entity('deceased')
@@ -18,12 +24,10 @@ export class Deceased {
   @Column()
   dod: Date;
 
-  @Column()
-  grave_id: number;
-
   @ManyToOne(() => Grave, (graves) => graves.id, {
     onDelete: 'SET NULL',
     nullable: true,
   })
+  @JoinColumn({ name: 'grave_id' })
   grave: Grave[];
 }
