@@ -5,7 +5,15 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+
+export enum FlowerType {
+  ROSE = 'rose',
+  LILY = 'lily',
+  TULIP = 'tulip',
+  OTHER = 'other',
+}
+
+import { Account } from '../../account/entities/account.entity';
 import { Grave } from '../../graves/entities/graves.entity';
 
 @Entity()
@@ -13,23 +21,24 @@ export class DigitalFlowers {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30 })
-  type: string;
+  @Column({ type: 'enum', enum: FlowerType, default: FlowerType.OTHER })
+  type: FlowerType;
 
   @Column({ type: 'int' })
-  duration: number;
+  created_at: number;
 
   @Column({ type: 'int' })
-  user_id: number;
+  id_sender: number;
 
   @Column({ type: 'int' })
-  grave_id: number;
+  id_grave: number;
 
-  @ManyToOne(() => User, (user) => user.id, {})
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  //Superflua adesso (?) 
+  //@ManyToOne(() => Account, (account) => account.id, {})
+  //@JoinColumn({ name: 'account_id' })
+  account: Account;
   //eager: true
-  @ManyToOne(() => Grave, (grave) => grave.id, {})
-  @JoinColumn({ name: 'grave_id' })
+  //@ManyToOne(() => Grave, (grave) => grave.id, {})
+  //@JoinColumn({ name: 'grave_id' })
   grave: Grave;
 }

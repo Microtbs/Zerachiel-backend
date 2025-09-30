@@ -10,7 +10,7 @@ export class DigitalFlowersService {
   constructor(
     @InjectRepository(DigitalFlowers)
     private readonly repo: Repository<DigitalFlowers>,
-  ) {}
+  ) { }
 
   findAll(): Promise<DigitalFlowers[]> {
     return this.repo.find();
@@ -23,18 +23,18 @@ export class DigitalFlowersService {
   }
 
   async create(dto: CreateDigitalFlowersDto): Promise<DigitalFlowers> {
-  const flower = this.repo.create({
-    type: dto.type,
-    duration: dto.duration,
-    user: { id: dto.user_id },
-    grave: { id: dto.grave_id },
-  });
-  return this.repo.save(flower);
+    const flower = this.repo.create({
+      type: dto.type,
+      created_at: dto.duration,
+      account: { id: dto.account_id },
+      grave: { id: dto.grave_id },
+    });
+    return this.repo.save(flower);
   }
 
   async remove(id: number): Promise<void> {
-  const flower = await this.findOne(id);
-  await this.repo.remove(flower);
+    const flower = await this.findOne(id);
+    await this.repo.remove(flower);
   }
 
   async update(id: number, dto: UpdateDigitalFlowersDto): Promise<DigitalFlowers> {
