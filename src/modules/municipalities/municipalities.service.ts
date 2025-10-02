@@ -9,32 +9,39 @@ import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
 export class MunicipalitiesService {
   constructor(
     @InjectRepository(Municipality)
-    private readonly repo: Repository<Municipality>,
+    private readonly municipalityRepo: Repository<Municipality>,
   ) {}
 
-  findAll(): Promise<Municipality[]> {
-    return this.repo.find();
+  async findAll(): Promise<Municipality[]> {
+    return this.municipalityRepo.find({
+      relations: ['contact', 'requestOffices'],
+    });
   }
 
   async findOne(id: number): Promise<Municipality> {
-    const municipality = await this.repo.findOneBy({ id });
-    if (!municipality) throw new NotFoundException('Municipality not found');
+    const municipality = await this.municipalityRepo.findOne({
+      where: { id },
+      relations: ['contact', 'requestOffices'],
+    });
+    if (!municipality) {
+      throw new NotFoundException(`Municipality with ID ${id} not found`);
+    }
     return municipality;
   }
 
-  create(dto: CreateMunicipalityDto): Promise<Municipality> {
-    const municipality = this.repo.create(dto);
-    return this.repo.save(municipality);
+  async create(dto: CreateMunicipalityDto): Promise<Municipality> {
+    const municipality = this.municipalityRepo.create(dto);
+    return this.municipalityRepo.save(municipality);
   }
 
   async update(id: number, dto: UpdateMunicipalityDto): Promise<Municipality> {
     const municipality = await this.findOne(id);
     Object.assign(municipality, dto);
-    return this.repo.save(municipality);
+    return this.municipalityRepo.save(municipality);
   }
 
   async remove(id: number): Promise<void> {
     const municipality = await this.findOne(id);
-    await this.repo.remove(municipality);
+    await this.municipalityRepo.remove(municipality);
   }
 }

@@ -5,8 +5,9 @@ import {
   Column,
   CreateDateColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
-
+import { RequestOffice } from '../../request_offices/entities/request_office.entity';
 @Entity('municipalities')
 export class Municipality {
   @PrimaryGeneratedColumn()
@@ -27,4 +28,7 @@ export class Municipality {
 
   @OneToOne(() => MunicipalityContact, (contact) => contact.municipality)
   contact: MunicipalityContact;
+
+  @OneToMany(() => RequestOffice, (requestOffice) => requestOffice.municipality)
+  requestOffices: RequestOffice[];
 }
