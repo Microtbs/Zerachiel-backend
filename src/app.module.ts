@@ -7,7 +7,6 @@ import { UsersModule } from './modules/users/users.module';
 import { MunicipalityContactsModule } from './modules/municipality_contacts/municipality_contacts.module';
 import { DeceasedModule } from './modules/deceased/deceased.module';
 import { GravesModule } from './modules/graves/graves.module';
-import { CaretakersModule } from './modules/caretakers/caretakers.module';
 import { DigitalFlowersModule } from './modules/digital_flowers/digital_flowers.module';
 import { MunicipalitiesModule } from './modules/municipalities/municipalities.module';
 import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
@@ -24,7 +23,6 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     // Importa qui i tuoi Moduli
     GravesModule,
-    CaretakersModule,
     UsersModule,
     MunicipalityContactsModule,
     DeceasedModule,

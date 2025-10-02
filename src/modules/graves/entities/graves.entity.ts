@@ -6,7 +6,6 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { Caretaker } from '../../caretakers/entities/caretakers.entity';
 import { RequestOffice } from '../../request_offices/entities/request_office.entity';
 import { Deceased } from '../../deceased/entities/deceased.entity';
 
@@ -32,13 +31,6 @@ export class Grave {
 
   @Column()
   section: string;
-
-  @ManyToOne(() => Caretaker, (caretakers) => caretakers.graves, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  @JoinColumn({ name: 'caretaker_id' }) // nome della colonna di join nella tabella 'graves'
-  caretakers: Caretaker;
 
   @ManyToOne(() => RequestOffice, {
     eager: true, // Carica gli uffici richieste associati quando si carica la tomba associati
