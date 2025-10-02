@@ -1,30 +1,32 @@
-import { Municipality } from '../../municipalities/entities/municipality.entity';
 import {
+  Entity,
   PrimaryGeneratedColumn,
   Column,
-  Entity,
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+import { Municipality } from '../../municipalities/entities/municipality.entity';
 
 @Entity('municipality_contacts')
 export class MunicipalityContact {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 15 })
+  phone: string;
+
+  @Column({ type: 'varchar', length: 255 })
   email: string;
 
-  @Column()
-  telephone: string;
-
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   pec: string;
 
-  @OneToOne(
-    () => Municipality,
-    (municipality) => municipality.municipality_contacts,
-  )
-  @JoinColumn({ name: 'municipality_id' })
+  @Column({ type: 'text', nullable: true })
+  website?: string;
+
+  @OneToOne(() => Municipality, (municipality) => municipality.contact, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'id_municipality' }) // FK
   municipality: Municipality;
 }
