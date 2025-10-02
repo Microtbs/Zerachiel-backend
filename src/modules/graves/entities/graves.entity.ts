@@ -4,9 +4,11 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Caretaker } from '../../caretakers/entities/caretakers.entity';
 import { RequestOffice } from '../../request_offices/entities/request_office.entity';
+import { Deceased } from '../../deceased/entities/deceased.entity';
 
 @Entity('graves')
 export class Grave {
@@ -45,4 +47,7 @@ export class Grave {
   })
   @JoinColumn({ name: 'request_office_id' }) // nome della colonna di join nella tabella 'graves'
   requestoffice: RequestOffice;
+
+  @OneToMany(() => Deceased, (deceased) => deceased.grave)
+  deceased: Deceased[];
 }
