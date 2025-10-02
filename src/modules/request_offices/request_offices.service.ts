@@ -1,106 +1,70 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { RequestOffice } from './entities/request_office.entity';
 import { CreateRequestOfficeDto } from './dto/create-request_office.dto';
 import { UpdateRequestOfficeDto } from './dto/update-request_office.dto';
-
 import { Municipality } from '../municipalities/entities/municipality.entity';
 
 @Injectable()
 export class RequestOfficesService {
   constructor(
     @InjectRepository(RequestOffice)
-    private readonly requestOfficeRepository: Repository<RequestOffice>,
-
+    private readonly requestOfficeRepo: Repository<RequestOffice>,
     @InjectRepository(Municipality)
-    private readonly municipalitiesRepository: Repository<Municipality>,
+    private readonly municipalityRepo: Repository<Municipality>,
   ) {}
 
-  /**
-   * Trova un municipio per ID.
-   * @param id - ID del municipio da trovare.
-   * @returns Il municipio trovato.
-   * */
-  private async findMunicipalityBy(id: number): Promise<Municipality> {
-    const municipality = await this.municipalitiesRepository.findOne({
-      where: { id: id },
+  async create(dto: CreateRequestOfficeDto): Promise<RequestOffice> {
+    const municipality = await this.municipalityRepo.findOne({
+      where: { id: dto.id_municipality },
     });
-    if (!municipality)
-      throw new NotFoundException('Ops... Municipio non trovato :(');
+    if (!municipality) throw new NotFoundException('Municipality not found');
 
-    return municipality;
-  }
-
-  /**
-   * Crea una nuova richiesta associata a un ufficio richieste e a una tomba.
-   * @param createRequestOfficeDto - Dati dell'ufficio richieste da creare.
-   * @returns L'ufficio richieste creato.
-   */
-  async create(
-    createRequestOfficeDto: CreateRequestOfficeDto,
-  ): Promise<RequestOffice> {
-    const municipality = await this.findMunicipalityBy(
-      createRequestOfficeDto.municipality_id,
-    ); // Trovare il municipio associato tramite un metodo private
-
-    const requestOffice = this.requestOfficeRepository.create({
-      requests_processed: createRequestOfficeDto.requests_processed,
+    const office = this.requestOfficeRepo.create({
+      name: dto.name,
+      address: dto.address,
       municipality,
     });
 
-    return this.requestOfficeRepository.save(requestOffice);
+    return this.requestOfficeRepo.save(office);
   }
 
-  async findAll(): Promise<RequestOffice[]> {
-    return this.requestOfficeRepository.find();
+  findAll(): Promise<RequestOffice[]> {
+    return this.requestOfficeRepo.find({ relations: ['municipality'] });
   }
 
   async findOne(id: number): Promise<RequestOffice> {
-    const office = await this.requestOfficeRepository.findOne({
+    const office = await this.requestOfficeRepo.findOne({
       where: { id },
-      relations: ['municipality'], // Ti mostra anche le relazioni
+      relations: ['municipality'],
     });
-    if (!office) throw new NotFoundException('Ops... Richiesta non trovata :(');
+    if (!office) throw new NotFoundException('RequestOffice not found');
     return office;
   }
 
-  /**
-   * Aggiorna un ufficio richeiste esistente.
-   * @param id - ID dell'ufficio richieste da aggiornare.
-   * @param updateRequestOfficeDto - Dati di aggiornamento dell'ufficio Richieste.
-   * @returns L'ufficio richieste aggiornato.
-   */
   async update(
     id: number,
-    updateRequestOfficeDto: UpdateRequestOfficeDto,
+    dto: UpdateRequestOfficeDto,
   ): Promise<RequestOffice> {
     const office = await this.findOne(id);
 
-    // Se l'ID del municipio è fornito, aggiorna il municipio associato
-    if (updateRequestOfficeDto.municipality_id) {
-      office.municipality = await this.findMunicipalityBy(
-        updateRequestOfficeDto.municipality_id,
-      );
+    if (dto.id_municipality) {
+      const municipality = await this.municipalityRepo.findOne({
+        where: { id: dto.id_municipality },
+      });
+      if (!municipality) throw new NotFoundException('Municipality not found');
+      office.municipality = municipality;
     }
 
-    if (typeof updateRequestOfficeDto.requests_processed === 'boolean') {
-      office.requests_processed = updateRequestOfficeDto.requests_processed;
-    }
+    if (dto.name !== undefined) office.name = dto.name;
+    if (dto.address !== undefined) office.address = dto.address;
 
-    return this.requestOfficeRepository.save(office);
+    return this.requestOfficeRepo.save(office);
   }
 
-  /**
-   * Rimuove un ufficio richieste per ID.
-   * @param id - ID dell'ufficio richieste da rimuovere.
-   */
   async remove(id: number): Promise<void> {
-    const result = await this.requestOfficeRepository.delete(id);
-    if (result.affected === 0)
-      throw new NotFoundException(
-        `Ops... Ufficio Richieste con l\'id ${id} non trovato :(`,
-      );
+    const office = await this.findOne(id);
+    await this.requestOfficeRepo.remove(office);
   }
 }

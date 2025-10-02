@@ -1,11 +1,17 @@
-import { IsBoolean, IsInt, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, MaxLength, IsInt } from 'class-validator';
 
 export class CreateRequestOfficeDto {
-  @IsBoolean()
+  @IsString()
   @IsNotEmpty()
-  requests_processed: boolean;
+  @MaxLength(30)
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  address: string;
 
   @IsInt()
   @IsNotEmpty()
-  municipality_id: number;
+  id_municipality: number;
 }
