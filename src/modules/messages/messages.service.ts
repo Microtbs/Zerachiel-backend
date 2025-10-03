@@ -32,28 +32,38 @@ export class MessagesService {
     });
   }
 
-  async findOne(id: number): Promise<Message> {
-    const message = await this.repo.findOneBy({ id });
+  async findOne(id: number, message_type?: message_type): Promise<MessageResponseDto> {
+    const message = await this.repo.findOne({ where: { id, message_type }, relations: ['sender', 'receiver', 'requestOffice'] });
     if (!message) throw new NotFoundException('message not found');
-    return message;
+    return plainToInstance(MessageResponseDto, message, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  async findMsgType(message_type: message_type): Promise<Message[]> {
-    const message = await this.repo.find({ where: { message_type } });
+
+
+  async findMsgType(message_type: message_type): Promise<MessageResponseDto[]> {
+    const message = await this.repo.find({ where: { message_type }, relations: ['sender', 'receiver', 'requestOffice'] });
     if (!message || message.length == 0) { throw new NotFoundException(`message ${message_type} not found`) };
-    return message;
+    return plainToInstance(MessageResponseDto, message, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  async findByType(type: msgType): Promise<Message[]> {
+  async findByType(type: msgType): Promise<MessageResponseDto[]> {
     const message = await this.repo.find({ where: { type } });
     if (!message || message.length == 0) { throw new NotFoundException(`message ${type} not found`) };
-    return message;
+    return plainToInstance(MessageResponseDto, message, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  async findByStatus(status: msgStatus): Promise<Message[]> {
+  async findByStatus(status: msgStatus): Promise<MessageResponseDto[]> {
     const message = await this.repo.find({ where: { status } });
     if (!message || message.length == 0) { throw new NotFoundException(`message ${status} not found`) };
-    return message;
+    return plainToInstance(MessageResponseDto, message, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async update(id: number, UpdateMessageDto: UpdateMessageDto): Promise<Message> {
