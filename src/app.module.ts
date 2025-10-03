@@ -10,7 +10,6 @@ import { GravesModule } from './modules/graves/graves.module';
 import { DigitalFlowersModule } from './modules/digital_flowers/digital_flowers.module';
 import { MunicipalitiesModule } from './modules/municipalities/municipalities.module';
 import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
-import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessagesModule } from './modules/messages/messages.module';
 
@@ -29,9 +28,8 @@ import { MessagesModule } from './modules/messages/messages.module';
     MunicipalitiesModule,
     DigitalFlowersModule,
     RequestOfficesModule,
-    FeedbacksModule,
     AuthModule,
     MessagesModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

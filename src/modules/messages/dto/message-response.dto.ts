@@ -1,18 +1,3 @@
-/*import { AccountForMessageDto } from '../../account/dto/account-response.dto';
-
-export class MessageResponseDto {
-    id: number;
-    message_type: string;
-    description: string;
-    created_at: number;
-    type: string;
-    status: string;
-
-    sender: AccountForMessageDto;
-    receiver?: AccountForMessageDto;   // può essere nullo
-}
-*/
-
 import { Expose, Type } from 'class-transformer';
 import { AccountForMessageDto } from '../../account/dto/account-response.dto';
 
@@ -36,10 +21,10 @@ export class MessageResponseDto {
     status: string;
 
     @Expose()
-    @Type(() => AccountForMessageDto) // dice a class-transformer come trasformare sender
+    @Type(() => AccountForMessageDto)
     sender: AccountForMessageDto;
 
     @Expose()
-    @Type(() => AccountForMessageDto) // idem per receiver
+    @Type(() => AccountForMessageDto)
     receiver?: AccountForMessageDto;
 }

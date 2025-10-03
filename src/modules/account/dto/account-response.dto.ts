@@ -16,5 +16,4 @@ export class AccountForMessageDto {
     @Expose()
     created_at: Date;
 
-    // niente email, tax_code, hashed_password
 }

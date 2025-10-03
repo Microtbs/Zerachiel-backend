@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { RequestOffice } from '../../request_offices/entities/request_office.entity';
 import { Deceased } from '../../deceased/entities/deceased.entity';
+import { DigitalFlowers } from 'src/modules/digital_flowers/entities/digital_flower.entity';
 
 @Entity('graves')
 export class Grave {
@@ -42,4 +43,8 @@ export class Grave {
 
   @OneToMany(() => Deceased, (deceased) => deceased.grave)
   deceased: Deceased[];
+
+  @OneToMany(() => DigitalFlowers, (digitalFlowers) => digitalFlowers.grave)
+  digitalFlowers: DigitalFlowers[];
+
 }

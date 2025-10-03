@@ -33,12 +33,20 @@ export class DigitalFlowers {
   @Column({ type: 'int' })
   id_grave: number;
 
-  //Superflua adesso (?) 
-  //@ManyToOne(() => Account, (account) => account.id, {})
-  //@JoinColumn({ name: 'account_id' })
-  account: Account;
-  //eager: true
-  //@ManyToOne(() => Grave, (grave) => grave.id, {})
-  //@JoinColumn({ name: 'grave_id' })
+  /*@ManyToOne(() => Account, account => account.sentMessages, { onDelete: 'CASCADE' })
+  sender: Account;
+
+  @ManyToOne(() => Grave, grave => grave.deceased, { onDelete: 'CASCADE', nullable: true })
+  grave: Grave;*/
+
+
+  @ManyToOne(() => Account, account => account.digitalFlowers, { eager: false })
+  @JoinColumn({ name: 'id_sender' })
+  sender: Account;
+
+
+  @ManyToOne(() => Grave, grave => grave.digitalFlowers, { eager: false })
+  @JoinColumn({ name: 'id_grave' })
   grave: Grave;
+
 }

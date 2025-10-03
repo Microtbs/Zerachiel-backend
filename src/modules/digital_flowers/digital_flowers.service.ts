@@ -26,11 +26,13 @@ export class DigitalFlowersService {
     const flower = this.repo.create({
       type: dto.type,
       created_at: dto.duration,
-      account: { id: dto.account_id },
+      sender: { id: dto.account_id },
       grave: { id: dto.grave_id },
     });
+
     return this.repo.save(flower);
   }
+
 
   async remove(id: number): Promise<void> {
     const flower = await this.findOne(id);

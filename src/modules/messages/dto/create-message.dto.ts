@@ -1,5 +1,5 @@
 import { msgStatus, msgType, message_type } from '../entities/message.entity'
-import { IsString, IsInt, IsNotEmpty, isNotEmpty, isInt } from 'class-validator';
+import { IsString, IsInt, IsNotEmpty, isNotEmpty, isInt, IsOptional } from 'class-validator';
 export class CreateMessageDto {
     @IsNotEmpty()
     message_type: message_type;
@@ -14,11 +14,13 @@ export class CreateMessageDto {
     type: msgType
 
     status: msgStatus
+
+    @IsNotEmpty()
     @IsInt()
     id_sender: number
 
     @IsInt()
-    @IsNotEmpty()
+    @IsOptional()
     id_receiver: number
 
     @IsInt()

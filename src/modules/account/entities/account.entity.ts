@@ -26,8 +26,12 @@ export class Account {
     @Column()
     family_member: boolean;
 
-    @Column()
+    @Column({ name: 'created_at', type: 'timestamp' })
     created_at: Date;
+
+    /* @Column({ name: 'updated_at', type: 'timestamp' })
+     updated_at: Date;
+     */
 
 
     @OneToMany(() => Message, message => message.sender)
@@ -39,11 +43,11 @@ export class Account {
     @OneToMany(() => DigitalFlowers, flower => flower.sender)
     digitalFlowers: DigitalFlowers[];
 
-    /* @OneToMany(() => RoleShift, shift => shift.worker)
+    /* @OneToMany(() => RoleShift, shift => shift.role)
      roleShifts: RoleShift[];
    
-     @OneToMany(() => UserRoles, userRole => userRoles.account)
-     userRoles: UserRoles[];*/
+     @OneToMany(() => UserRoles, userRole => userRole.account)
+     userRoles: UserRole[];*/
 
 
 }
