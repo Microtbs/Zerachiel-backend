@@ -13,6 +13,7 @@ import { RequestOfficesModule } from './modules/request_offices/request_offices.
 import { RequestsModule } from './modules/requests/requests.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { MessagesModule } from './modules/messages/messages.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuthModule } from './modules/auth/auth.module';
     RequestsModule,
     FeedbacksModule,
     AuthModule,
+    MessagesModule
   ],
 })
-export class AppModule {}
+export class AppModule { }
