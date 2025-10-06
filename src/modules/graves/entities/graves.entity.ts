@@ -28,9 +28,6 @@ export class Grave {
   stonemason: string;
 
   @Column()
-  flowers_count: number;
-
-  @Column()
   section: string;
 
   @ManyToOne(() => RequestOffice, {
@@ -38,7 +35,7 @@ export class Grave {
     nullable: true, // L'ufficio richieste può essere nulla
     onDelete: 'CASCADE', // Se l'ufficio richieste viene eliminato, le tombe associate vengono eliminate
   })
-  @JoinColumn({ name: 'request_office_id' }) // nome della colonna di join nella tabella 'graves'
+  @JoinColumn({ name: 'id_request_office' }) // nome della colonna di join nella tabella 'graves'
   requestoffice: RequestOffice;
 
   @OneToMany(() => Deceased, (deceased) => deceased.grave)
@@ -46,5 +43,4 @@ export class Grave {
 
   @OneToMany(() => DigitalFlowers, (digitalFlowers) => digitalFlowers.grave)
   digitalFlowers: DigitalFlowers[];
-
 }
