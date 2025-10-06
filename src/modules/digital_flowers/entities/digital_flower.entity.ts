@@ -13,7 +13,7 @@ export enum FlowerType {
   OTHER = 'other',
 }
 
-import { Account } from '../../account/entities/account.entity';
+import { Account } from '../../accounts/entities/account.entity';
 import { Grave } from '../../graves/entities/graves.entity';
 
 @Entity()
@@ -39,14 +39,13 @@ export class DigitalFlowers {
   @ManyToOne(() => Grave, grave => grave.deceased, { onDelete: 'CASCADE', nullable: true })
   grave: Grave;*/
 
-
-  @ManyToOne(() => Account, account => account.digitalFlowers, { eager: false })
+  @ManyToOne(() => Account, (account) => account.digitalFlowers, {
+    eager: false,
+  })
   @JoinColumn({ name: 'id_sender' })
   sender: Account;
 
-
-  @ManyToOne(() => Grave, grave => grave.digitalFlowers, { eager: false })
+  @ManyToOne(() => Grave, (grave) => grave.digitalFlowers, { eager: false })
   @JoinColumn({ name: 'id_grave' })
   grave: Grave;
-
 }

@@ -1,11 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AccountService } from './account.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 
-@Controller('account')
-export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+@Controller('accounts')
+export class AccountsController {
+  constructor(private readonly accountService: AccountsService) {}
 
   @Post()
   create(@Body() createAccountDto: CreateAccountDto) {
@@ -32,4 +40,3 @@ export class AccountController {
     return this.accountService.remove(+id);
   }
 }
-

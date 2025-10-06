@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
-import { Account } from "./entities/account.entity"
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository } from 'typeorm';
+import { Account } from './entities/account.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 
 @Injectable()
-export class AccountService {
-
-  constructor(@InjectRepository(Account) private readonly repo: Repository<Account>) { }
+export class AccountsService {
+  constructor(
+    @InjectRepository(Account) private readonly repo: Repository<Account>,
+  ) {}
 
   create(createAccountDto: CreateAccountDto): Promise<Account> {
     const user = this.repo.create(createAccountDto);
@@ -31,7 +32,10 @@ export class AccountService {
     return account;
   }
 
-  async update(id: number, updateAccountDto: UpdateAccountDto): Promise<Account> {
+  async update(
+    id: number,
+    updateAccountDto: UpdateAccountDto,
+  ): Promise<Account> {
     const account = await this.repo.findOneBy({ id });
     if (!account) throw new NotFoundException('Account not found');
     return this.repo.save({ id, ...updateAccountDto });
@@ -43,3 +47,4 @@ export class AccountService {
     return this.repo.delete(id);
   }
 }
+

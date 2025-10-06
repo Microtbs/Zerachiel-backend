@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormConfig } from './configs/ormconfig';
 
-import { UsersModule } from './modules/users/users.module';
 import { MunicipalityContactsModule } from './modules/municipality_contacts/municipality_contacts.module';
 import { DeceasedModule } from './modules/deceased/deceased.module';
 import { GravesModule } from './modules/graves/graves.module';
@@ -12,6 +11,7 @@ import { MunicipalitiesModule } from './modules/municipalities/municipalities.mo
 import { RequestOfficesModule } from './modules/request_offices/request_offices.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessagesModule } from './modules/messages/messages.module';
+import { AccountsModule } from './modules/accounts/accounts.module';
 
 @Module({
   imports: [
@@ -21,8 +21,8 @@ import { MessagesModule } from './modules/messages/messages.module';
       useFactory: () => ormConfig, // Usa la configurazione definita in ormconfig.ts
     }),
     // Importa qui i tuoi Moduli
+    AccountsModule,
     GravesModule,
-    UsersModule,
     MunicipalityContactsModule,
     DeceasedModule,
     MunicipalitiesModule,
@@ -32,4 +32,4 @@ import { MessagesModule } from './modules/messages/messages.module';
     MessagesModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
