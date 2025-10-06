@@ -1,30 +1,41 @@
-import { msgStatus, msgType, message_type } from '../entities/message.entity'
-import { IsString, IsInt, IsNotEmpty, isNotEmpty, isInt, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsInt,
+  IsNotEmpty,
+  isNotEmpty,
+  isInt,
+  IsOptional,
+} from 'class-validator';
+import {
+  msgStatus,
+  msgType,
+  message_type,
+} from '../../../common/enums/message.enums';
+
 export class CreateMessageDto {
-    @IsNotEmpty()
-    message_type: message_type;
+  @IsNotEmpty()
+  message_type: message_type;
 
-    @IsString()
-    @IsNotEmpty()
-    description: string
-    @IsInt()
-    created_at: number;
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+  @IsInt()
+  created_at: number;
 
-    @IsNotEmpty()
-    type: msgType
+  @IsNotEmpty()
+  type: msgType;
 
-    status: msgStatus
+  status: msgStatus;
 
-    @IsNotEmpty()
-    @IsInt()
-    id_sender: number
+  @IsNotEmpty()
+  @IsInt()
+  id_sender: number;
 
-    @IsInt()
-    @IsOptional()
-    id_receiver: number
+  @IsInt()
+  @IsOptional()
+  id_receiver: number;
 
-    @IsInt()
-    @IsNotEmpty()
-    id_request_office: number;
+  @IsInt()
+  @IsNotEmpty()
+  id_request_office: number;
 }
-
