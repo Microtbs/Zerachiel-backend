@@ -4,13 +4,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from '../users/users.module';
+import { AccountsModule } from '../accounts/accounts.module';
 import { JwtStrategy } from './jwt.strategy';
 import { jwtConfig } from '../../configs/jwtconfig';
 
 @Module({
   imports: [
-    UsersModule,
+    AccountsModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConfig.secret,
