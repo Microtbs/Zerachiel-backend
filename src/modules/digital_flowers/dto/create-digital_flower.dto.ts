@@ -1,5 +1,5 @@
 import { IsNotEmpty, Length, IsInt, Min } from 'class-validator';
-import { FlowerType } from '../entities/digital_flower.entity'
+import { FlowerType } from '../../../common/enums/flower.enums';
 
 export class CreateDigitalFlowersDto {
   @IsNotEmpty() // non può essere vuota
@@ -18,3 +18,4 @@ export class CreateDigitalFlowersDto {
   // @Min(1) // l'ID della tomba deve esistere (>0)
   grave_id: number;
 }
+
