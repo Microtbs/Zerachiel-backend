@@ -6,15 +6,9 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-export enum FlowerType {
-  ROSE = 'rose',
-  LILY = 'lily',
-  TULIP = 'tulip',
-  OTHER = 'other',
-}
-
 import { Account } from '../../accounts/entities/account.entity';
 import { Grave } from '../../graves/entities/graves.entity';
+import { FlowerType } from '../../../common/enums/flower.enums';
 
 @Entity()
 export class DigitalFlowers {
