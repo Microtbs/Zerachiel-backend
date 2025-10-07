@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AccountsService } from '../accounts/accounts.service';
-import { RegisterDto } from './dto/register.dto';
+import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 
@@ -18,7 +18,7 @@ export class AuthService {
       .catch(() => null);
     if (existing) throw new UnauthorizedException('Email già registrata');
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const hashedPassword = await bcrypt.hash(dto.hashed_password, 10);
 
     // Costruisco tutto l'oggetto CreateUserDto, con la password hashata
     const user = await this.accountsService.create({
