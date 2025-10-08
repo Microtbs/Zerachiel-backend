@@ -10,8 +10,8 @@ import { Account } from '../../accounts/entities/account.entity';
 import { Grave } from '../../graves/entities/graves.entity';
 import { FlowerType } from '../../../common/enums/flower.enums';
 
-@Entity()
-export class DigitalFlowers {
+@Entity('digital_flowers')
+export class DigitalFlower {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -1,9 +1,18 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { DigitalFlowersService } from './digital_flowers.service';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
 
-@Controller('digitalflowers')
+@Controller('digital_flowers')
 export class DigitalFlowersController {
   constructor(private readonly service: DigitalFlowersService) {}
 
@@ -35,4 +44,3 @@ export class DigitalFlowersController {
     return this.service.remove(id);
   }
 }
-
