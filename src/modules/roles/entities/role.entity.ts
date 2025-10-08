@@ -1,5 +1,5 @@
-import { RoleType } from "src/common/enums/roles.enums";
-import { UserRole } from "src/modules/user_roles/entities/user_role.entity";
+import { RoleType } from "../../../common/enums/roles.enums";
+import { UserRole } from "../..//user_roles/entities/user_role.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('roles')
