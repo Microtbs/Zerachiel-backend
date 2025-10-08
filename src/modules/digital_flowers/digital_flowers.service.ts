@@ -1,28 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DigitalFlowers } from './entities/digital_flower.entity';
+import { DigitalFlower } from './entities/digital_flower.entity';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
 
 @Injectable()
 export class DigitalFlowersService {
   constructor(
-    @InjectRepository(DigitalFlowers)
-    private readonly repo: Repository<DigitalFlowers>,
-  ) { }
+    @InjectRepository(DigitalFlower)
+    private readonly repo: Repository<DigitalFlower>,
+  ) {}
 
-  findAll(): Promise<DigitalFlowers[]> {
+  findAll(): Promise<DigitalFlower[]> {
     return this.repo.find();
   }
 
-  async findOne(id: number): Promise<DigitalFlowers> {
+  async findOne(id: number): Promise<DigitalFlower> {
     const flower = await this.repo.findOneBy({ id });
     if (!flower) throw new NotFoundException('Digital flowers not found');
     return flower;
   }
 
-  async create(dto: CreateDigitalFlowersDto): Promise<DigitalFlowers> {
+  async create(dto: CreateDigitalFlowersDto): Promise<DigitalFlower> {
     const flower = this.repo.create({
       type: dto.type,
       created_at: dto.duration,
@@ -33,16 +33,17 @@ export class DigitalFlowersService {
     return this.repo.save(flower);
   }
 
-
   async remove(id: number): Promise<void> {
     const flower = await this.findOne(id);
     await this.repo.remove(flower);
   }
 
-  async update(id: number, dto: UpdateDigitalFlowersDto): Promise<DigitalFlowers> {
+  async update(
+    id: number,
+    dto: UpdateDigitalFlowersDto,
+  ): Promise<DigitalFlower> {
     const flower = await this.findOne(id);
     Object.assign(flower, dto);
     return this.repo.save(flower);
   }
 }
-

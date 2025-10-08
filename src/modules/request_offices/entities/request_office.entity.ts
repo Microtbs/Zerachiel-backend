@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Municipality } from '../../municipalities/entities/municipality.entity';
-import { Message } from 'src/modules/messages/entities/message.entity';
+import { Message } from '../../messages/entities/message.entity';
 
 /**
  * Entità che rappresenta un ufficio richieste.
@@ -37,6 +37,6 @@ export class RequestOffice {
   @JoinColumn({ name: 'id_municipality' })
   municipality: Municipality;
 
-  @OneToMany(() => Message, message => message.requestOffice)
+  @OneToMany(() => Message, (message) => message.requestOffice)
   messages: Message[];
 }

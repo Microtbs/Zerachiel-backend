@@ -27,6 +27,6 @@ export class MunicipalityContact {
   @OneToOne(() => Municipality, (municipality) => municipality.contact, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'id_municipality' }) // FK
+  @JoinColumn({ name: 'id_municipality' })
   municipality: Municipality;
 }

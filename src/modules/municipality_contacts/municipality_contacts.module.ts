@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MunicipalityContact } from './entities/municipality_contacts.entity';
+import { MunicipalityContact } from './entities/municipality_contact.entity';
 import { MunicipalityContactsService } from './municipality_contacts.service';
 import { MunicipalityContactsController } from './municipality_contacts.controller';
 
@@ -9,4 +9,4 @@ import { MunicipalityContactsController } from './municipality_contacts.controll
   providers: [MunicipalityContactsService],
   controllers: [MunicipalityContactsController],
 })
-export class MunicipalityContactsModule { }
+export class MunicipalityContactsModule {}
