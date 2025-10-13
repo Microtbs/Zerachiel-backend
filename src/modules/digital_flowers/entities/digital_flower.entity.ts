@@ -4,10 +4,11 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { Account } from '../../accounts/entities/account.entity';
-import { Grave } from '../../graves/entities/graves.entity';
+import { Grave } from '../../graves/entities/grave.entity';
 import { FlowerType } from '../../../common/enums/flower.enums';
 
 @Entity('digital_flowers')
@@ -18,8 +19,8 @@ export class DigitalFlower {
   @Column({ type: 'enum', enum: FlowerType, default: FlowerType.OTHER })
   type: FlowerType;
 
-  @Column({ type: 'int' })
-  created_at: number;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
   @Column({ type: 'int' })
   id_sender: number;

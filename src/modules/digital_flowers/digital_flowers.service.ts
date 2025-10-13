@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { DigitalFlower } from './entities/digital_flower.entity';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
-
+import { DigitalFlowerResponseDTO } from './dto/digital_flower-response.dto';
 @Injectable()
 export class DigitalFlowersService {
   constructor(
@@ -12,9 +12,33 @@ export class DigitalFlowersService {
     private readonly repo: Repository<DigitalFlower>,
   ) {}
 
-  findAll(): Promise<DigitalFlower[]> {
-    return this.repo.find();
-  }
+  async findAll(): Promise<DigitalFlowerResponseDTO[]> {
+  const digitalFlowers = await this.repo.find({
+    relations: ['sender', 'grave', 'grave.deceased'],
+  });
+
+  const result: DigitalFlowerResponseDTO[] = digitalFlowers.map((flower) => ({
+    id: flower.id,
+    type: flower.type,
+    created_at: flower.created_at,
+    sender: {
+      id: flower.sender.id,
+      first_name: flower.sender.first_name,
+      last_name: flower.sender.last_name,
+    },
+    grave: {
+      id: flower.grave.id,
+      deceased: flower.grave.deceased.map((d) => ({
+        first_name: d.firstName,
+        last_name: d.lastName,
+      })),
+    },
+  }));
+
+  return result;
+}
+
+
 
   async findOne(id: number): Promise<DigitalFlower> {
     const flower = await this.repo.findOneBy({ id });

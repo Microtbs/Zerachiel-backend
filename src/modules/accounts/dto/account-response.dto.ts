@@ -1,19 +1,19 @@
-import { Expose } from 'class-transformer';
-
 export class AccountForMessageDto {
-    @Expose()
-    id: number;
+  id: number;
 
-    @Expose()
-    first_name: string;
+  first_name: string;
 
-    @Expose()
-    last_name: string;
+  last_name: string;
 
-    @Expose()
-    family_member: boolean;
+  family_member: boolean;
 
-    @Expose()
-    created_at: Date;
+  created_at: Date;
+}
 
+export class SenderDTO {
+  id: number;
+
+  first_name: string;
+
+  last_name: string;
 }
