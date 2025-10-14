@@ -1,3 +1,5 @@
+import { RoleDTO } from '../../roles/dto/role-response.dto';
+
 export class AccountForMessageDto {
   id: number;
 
@@ -16,4 +18,16 @@ export class SenderDTO {
   first_name: string;
 
   last_name: string;
+}
+
+export class AccountResponseDTO {
+  id: number;
+
+  first_name: string;
+
+  last_name: string;
+
+  email: string;
+
+  roles?: RoleDTO[];
 }

@@ -4,6 +4,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { AccountResponseDTO } from './dto/account-response.dto';
 
 @Injectable()
 export class AccountsService {
@@ -24,6 +25,26 @@ export class AccountsService {
     const account = await this.repo.findOne({ where: { email } });
     if (!account) throw new NotFoundException('Account not found');
     return account;
+  }
+
+  async getRoleOfAccount(id: number): Promise<AccountResponseDTO> {
+    const account = await this.repo.findOne({
+      where: { id },
+      relations: ['userRoles', 'userRoles.role'],
+    });
+    if (!account) throw new NotFoundException('Account not found');
+    const dto: AccountResponseDTO = {
+      id: account.id,
+      first_name: account.first_name,
+      last_name: account.last_name,
+      email: account.email,
+      roles: account.userRoles.map((ur) => ({
+        id: ur.role.id,
+        type: ur.role.type,
+        details: ur.role.details,
+      })),
+    };
+    return dto;
   }
 
   async findOne(id: number): Promise<Account> {
@@ -47,4 +68,3 @@ export class AccountsService {
     return this.repo.delete(id);
   }
 }
-

@@ -1,23 +1,10 @@
-export class SenderDTO {
-  id: number;
-  first_name: string;
-  last_name: string;
-}
-export class DeceasedDTO {
-  first_name: string;
-  last_name: string;
-}
-export class GraveDTO {
-  id: number;
-  deceased: DeceasedDTO[];
-}
+import { SenderDTO } from 'src/modules/accounts/dto/account-response.dto';
+import { GraveDTO } from 'src/modules/graves/dto/grave-response.dto';
 
 export class DigitalFlowerResponseDTO {
   id: number;
   type: string;
   created_at: Date;
   sender: SenderDTO;
-  grave: GraveDTO; 
+  grave: GraveDTO;
 }
-
-

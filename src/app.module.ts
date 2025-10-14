@@ -13,7 +13,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { RolesModule } from './modules/roles/roles.module';
-import { UserRolesModule } from './modules/user_roles/user_roles.module';
 
 @Module({
   imports: [
@@ -33,7 +32,6 @@ import { UserRolesModule } from './modules/user_roles/user_roles.module';
     AuthModule,
     MessagesModule,
     RolesModule,
-    UserRolesModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

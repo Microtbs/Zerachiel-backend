@@ -13,32 +13,30 @@ export class DigitalFlowersService {
   ) {}
 
   async findAll(): Promise<DigitalFlowerResponseDTO[]> {
-  const digitalFlowers = await this.repo.find({
-    relations: ['sender', 'grave', 'grave.deceased'],
-  });
+    const digitalFlowers = await this.repo.find({
+      relations: ['sender', 'grave', 'grave.deceased'],
+    });
 
-  const result: DigitalFlowerResponseDTO[] = digitalFlowers.map((flower) => ({
-    id: flower.id,
-    type: flower.type,
-    created_at: flower.created_at,
-    sender: {
-      id: flower.sender.id,
-      first_name: flower.sender.first_name,
-      last_name: flower.sender.last_name,
-    },
-    grave: {
-      id: flower.grave.id,
-      deceased: flower.grave.deceased.map((d) => ({
-        first_name: d.firstName,
-        last_name: d.lastName,
-      })),
-    },
-  }));
+    const result: DigitalFlowerResponseDTO[] = digitalFlowers.map((flower) => ({
+      id: flower.id,
+      type: flower.type,
+      created_at: flower.createdAt,
+      sender: {
+        id: flower.sender.id,
+        first_name: flower.sender.first_name,
+        last_name: flower.sender.last_name,
+      },
+      grave: {
+        id: flower.grave.id,
+        deceased: flower.grave.deceased.map((d) => ({
+          first_name: d.firstName,
+          last_name: d.lastName,
+        })),
+      },
+    }));
 
-  return result;
-}
-
-
+    return result;
+  }
 
   async findOne(id: number): Promise<DigitalFlower> {
     const flower = await this.repo.findOneBy({ id });
@@ -49,7 +47,7 @@ export class DigitalFlowersService {
   async create(dto: CreateDigitalFlowersDto): Promise<DigitalFlower> {
     const flower = this.repo.create({
       type: dto.type,
-      created_at: dto.duration,
+      createdAt: dto.duration,
       sender: { id: dto.account_id },
       grave: { id: dto.grave_id },
     });

@@ -30,9 +30,9 @@ export class AccountsController {
     return this.accountService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountService.update(+id, updateAccountDto);
+  @Get(':id/roleOfAccount')
+  getRoleOfAccount(@Param('id') id: string) {
+    return this.accountService.getRoleOfAccount(+id);
   }
 
   @Delete(':id')
