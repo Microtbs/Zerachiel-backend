@@ -4,6 +4,7 @@ import { AccountsService } from '../accounts/accounts.service';
 import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { RoleType } from 'src/common/enums/role.enums';
 
 @Injectable()
 export class AuthService {
@@ -35,18 +36,30 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.accountsService.findByEmail(dto.email);
+    const rolePriority: Record<RoleType, number> = {
+      [RoleType.USER]: 1,
+      [RoleType.CARETAKER]: 2,
+      [RoleType.STONEMASON]: 3,
+      [RoleType.OFFICER]: 4,
+    };
+    const roleData = await this.accountsService.getRoleOfAccount(user.id);
+
+    const roles: RoleType[] =
+      roleData?.roles?.map((r) => r.type as RoleType) || [];
+
+    const selectedRole = roles.reduce((prev, curr) => {
+      return rolePriority[curr] > rolePriority[prev] ? curr : prev;
+    }, roles[0]);
+
     const isValid = await bcrypt.compare(dto.password, user.hashed_password);
     if (!isValid) throw new UnauthorizedException('Credenziali errate');
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = {
+      sub: user.id,
+      roles: selectedRole,
+    };
     return {
       access_token: this.jwtService.sign(payload),
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      tax_code: user.tax_code,
-      family_member: user.family_member,
     };
   }
 }

@@ -49,4 +49,9 @@ export class RolesService {
   async remove(id: number): Promise<void> {
     await this.roleRepository.delete(id);
   }
+  async removeRoleOfAccount(account_id: number): Promise<void> {
+    await this.roleRepository.manager.delete(UserRole, {
+      account: { id: account_id },
+    });
+  }
 }

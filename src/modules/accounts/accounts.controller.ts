@@ -3,13 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { RoleType } from 'src/common/enums/role.enums';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles/roles.guard';
 
 @Controller('accounts')
 export class AccountsController {
@@ -20,6 +23,8 @@ export class AccountsController {
     return this.accountService.create(createAccountDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.OFFICER)
   @Get()
   findAll() {
     return this.accountService.findAll();

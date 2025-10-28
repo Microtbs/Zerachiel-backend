@@ -1,4 +1,4 @@
-import { MunicipalityContact } from '../../municipality_contacts/entities/municipality_contacts.entity';
+import { MunicipalityContact } from '../../municipality_contacts/entities/municipality_contact.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

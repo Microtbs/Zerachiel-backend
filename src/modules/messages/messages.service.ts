@@ -17,7 +17,7 @@ import {
 export class MessagesService {
   constructor(
     @InjectRepository(Message) private readonly repo: Repository<Message>,
-  ) {}
+  ) { }
 
   create(CreateMessageDto: CreateMessageDto): Promise<Message> {
     const Grave = this.repo.create(CreateMessageDto);

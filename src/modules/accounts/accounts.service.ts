@@ -48,7 +48,11 @@ export class AccountsService {
   }
 
   async findOne(id: number): Promise<Account> {
-    const account = await this.repo.findOneBy({ id });
+    const account = await this.repo.findOne({
+      where: { id },
+      relations: ['userRoles', 'userRoles.role'],
+    });
+
     if (!account) throw new NotFoundException('Account not found');
     return account;
   }

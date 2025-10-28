@@ -6,7 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Grave } from '../../graves/entities/graves.entity';
+import { Grave } from '../../graves/entities/grave.entity';
 
 @Entity('deceased')
 export class Deceased {
