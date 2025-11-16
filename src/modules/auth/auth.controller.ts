@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.dto';
 import { LoginDto } from './dto/login.dto';
@@ -21,6 +21,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { access_token } = await this.authService.login(dto);
+    res.setHeader('Authorization', `Bearer ${access_token}`);
     res.cookie('Token', access_token, {
       httpOnly: true,
       secure: false,
@@ -29,5 +30,23 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     return { message: 'Login successful.' };
+  }
+
+  @Get('verify')
+  verify(@Query('token') token: number) {
+    return this.authService.verifyEmail(token);
+  }
+
+  @Post('recoverPassword')
+  recoverPassword(@Body('email') email: string) {
+    return this.authService.requestPasswordReset(email);
+  }
+
+  @Post('resetPassword')
+  resetPassword(
+    @Body('token') token: number,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.authService.resetPassword(token, newPassword);
   }
 }

@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { AccountsModule } from '../accounts/accounts.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { jwtConfig } from '../../configs/jwtconfig';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { jwtConfig } from '../../configs/jwtconfig';
       secret: jwtConfig.secret,
       signOptions: { expiresIn: jwtConfig.expiresIn },
     }),
+    MailModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
