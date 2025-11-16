@@ -29,6 +29,9 @@ export class Account {
   @Column({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
+  @Column({ type: 'date' })
+  date_of_birth: Date;
+
   /* @Column({ name: 'updated_at', type: 'timestamp' })
      updated_at: Date;
      */
