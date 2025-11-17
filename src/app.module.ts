@@ -13,6 +13,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RolesModule } from './modules/roles/roles.module';
     AuthModule,
     MessagesModule,
     RolesModule,
+    MailModule,
   ],
 })
 export class AppModule {}
