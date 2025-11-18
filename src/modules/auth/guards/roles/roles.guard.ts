@@ -13,7 +13,6 @@ export class RolesGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
 
-    //Utile se non ci sono ruoli richiesti
     if (!requiredRoles || requiredRoles.length === 0) {
       return true;
     }
@@ -41,12 +40,5 @@ export class RolesGuard implements CanActivate {
     );
 
     return userLevel >= requiredLevel;
-    const user = context.switchToHttp().getRequest().user;
-
-    if (!user || !user.roles) return false;
-
-    const hasRequiredRole = requiredRoles.includes(user.roles as RoleType);
-
-    return hasRequiredRole;
   }
 }

@@ -10,8 +10,7 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RoleType } from 'src/common/enums/role.enums';
 import { MailService } from '../mail/mail.service';
-import { randomBytes } from 'crypto';
-import { UpdateSensitiveDto } from '../accounts/dto/update-account.dto';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class AuthService {
@@ -28,37 +27,9 @@ export class AuthService {
     private accountsService: AccountsService,
     private jwtService: JwtService,
     private mailService: MailService,
+    private rolesService: RolesService,
   ) {}
 
-  async login(dto: LoginDto) {
-    const user = await this.accountsService.findByEmail(dto.email);
-    const rolePriority: Record<RoleType, number> = {
-      [RoleType.USER]: 1,
-      [RoleType.CARETAKER]: 2,
-      [RoleType.STONEMASON]: 3,
-      [RoleType.OFFICER]: 4,
-      [RoleType.ADMIN]: 5,
-    };
-    const roleData = await this.accountsService.getRoleOfAccount(user.id);
-
-    const roles: RoleType[] =
-      roleData?.roles?.map((r) => r.type as RoleType) || [];
-
-    const selectedRole = roles.reduce((prev, curr) => {
-      return rolePriority[curr] > rolePriority[prev] ? curr : prev;
-    }, roles[0]);
-
-    const isValid = await bcrypt.compare(dto.password, user.hashed_password);
-    if (!isValid) throw new UnauthorizedException('Credenziali errate');
-
-    const payload = {
-      sub: user.id,
-      roles: selectedRole,
-    };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
   async register(dto: RegisterDto) {
     const existing = await this.accountsService
       .findByEmail(dto.email)
@@ -153,6 +124,7 @@ export class AuthService {
       hashed_password: hashedPassword,
       family_member: tokenData.dto.family_member,
     });
+    await this.rolesService.createRoleofAccount(user.id, 1); // Assegna ruolo USER di default
 
     return { message: 'Email verificata con successo!' };
   }
@@ -188,6 +160,8 @@ export class AuthService {
     };
     return {
       access_token: this.jwtService.sign(payload),
+    };
+  }
   private resetTokens = new Map<
     number,
     {

@@ -15,13 +15,17 @@ export class RolesController {
     return this.rolesService.findOne(+id);
   }
   @Get('AssignRole/:account_id/:role_id')
-  assignRole(
+  async assignRole(
     @Param('account_id') accountId: number,
     @Param('role_id') roleId: number,
   ) {
-    const assign = this.rolesService.createRoleofAccount(+accountId, +roleId);
+    const assign = await this.rolesService.createRoleofAccount(
+      +accountId,
+      +roleId,
+    );
     return { message: 'Role assigned successfully' };
   }
+
   @Delete('AssignRole/:account_id')
   removeRole(@Param('account_id') accountId: number) {
     const deleteRole = this.rolesService.removeRoleOfAccount(+accountId);
