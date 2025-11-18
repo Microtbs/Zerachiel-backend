@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UserRole } from './entities/user_role.entity';
+import { AccountsService } from '../accounts/accounts.service';
 
 @Injectable()
 export class RolesService {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    private readonly accountService: AccountsService,
   ) {}
 
   async findAll(): Promise<Role[]> {
@@ -31,6 +33,14 @@ export class RolesService {
     account_id: number,
     role_id: number,
   ): Promise<UserRole> {
+    const alreadyHasRole = (
+      await this.accountService.findOne(account_id)
+    ).userRoles.some((ur) => ur.role.id === role_id);
+
+    if (alreadyHasRole) {
+      throw new NotFoundException('Role already assigned to the account');
+    }
+
     const userRole = this.roleRepository.manager.create(UserRole, {
       account: { id: account_id },
       role: { id: role_id },
