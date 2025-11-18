@@ -33,11 +33,6 @@ export class RolesService {
     account_id: number,
     role_id: number,
   ): Promise<UserRole> {
-    console.log(
-      (await this.accountService.findOne(account_id)).userRoles.some(
-        (ur) => ur.role.id === role_id,
-      ),
-    );
     const alreadyHasRole = (
       await this.accountService.findOne(account_id)
     ).userRoles.some((ur) => ur.role.id === role_id);
