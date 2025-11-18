@@ -1,72 +1,125 @@
-# Gestione Cimitero
+# Zerachiel Backend
+
+> API NestJS per digitalizzare la gestione del cimitero comunale: ricerca tombe, richieste di manutenzione, invio di fiori digitali e flussi di autenticazione sicuri.
 
 ## Indice
-- [Backend](#backend)
-  - [NestJS](#nestjs)
-  - [TypeORM](#typeorm)
-- [Database](#database)
-  - [PostgreSQL](#postgresql)
-- [Uso](#uso)
-  - [Setup progetto](#setup-progetto)
-  - [NestJS – Avvio progetto](#nestjs--avvio-progetto)
-  - [NestJS – Test](#nestjs--test)
 
+1. [Panoramica](#panoramica)
+2. [Architettura Applicativa](#architettura-applicativa)
+3. [Moduli principali](#moduli-principali)
+4. [Relazioni e flussi dati](#relazioni-e-flussi-dati)
+5. [Flussi funzionali chiave](#flussi-funzionali-chiave)
+6. [Configurazione e variabili d'ambiente](#configurazione-e-variabili-dambiente)
+7. [Setup & comandi](#setup--comandi)
+8. [Testing e qualità](#testing-e-qualità)
+9. [Deployment](#deployment)
+10. [Struttura cartelle](#struttura-cartelle)
 
-## Descrizione Progetto
-> L’app <b>Zerachiel</b> nasce per offrire ai cittadini uno strumento digitale intuitivo per <b>trovare e raggiungere facilmente le tombe dei propri cari</b> all'interno del cimitero comunale di Trapani. Grazie a una <b>mappa interattiva</b> e un <b>sistema di navigazione intelligente</b>, i visitatori potranno individuare rapidamente la posizione esatta della tomba e ricevere indicazioni per raggiungerla senza difficoltà.
+## Panoramica
 
-### Funzionalità Principali
-- **Ricerca Avanzata ->** Trova la tomba inserendo nome e cognome del defunto
-- **Mappa Interattiva ->** Visualizza l'intera area cimiteriale con settori ben definiti
-- **Navigazione Guidata ->** Ottieni indicazioni precise per raggiungere la posizione desiderata
-- **Scheda Defunto ->** Consulta informazioni come data di nascita e decesso
+- Backend costruito con NestJS 11, TypeORM e PostgreSQL.
+- Gestione ruoli gerarchica (`user` → `admin`) tramite guard personalizzati.
+- Mailing asincrono per verifica email e recupero password.
+- Feature principali: gestione tombe/defunti, uffici comunali, messaggi di manutenzione, fiori digitali e profili utente.
 
-### Obiettivo
+## Architettura Applicativa
 
-> L’app semplifica la visita al cimitero, rendendo la ricerca più veloce ed evitando disorientamenti. Un supporto tecnologico moderno, pensato per rendere l’esperienza più serena e accessibile per tutti.
+- **NestJS + Dependency Injection**: ogni feature è un modulo isolato con controller, service ed entity dedicati.
+- **TypeORM**: mapping esplicito delle entità (Account, Grave, RequestOffice, ecc.) e gestione automatica delle relazioni.
+- **Security Layer**: JWT strategy (`JwtAuthGuard`) + `RolesGuard` che applica una gerarchia di privilegi.
+- **MailerModule**: configurato tramite `MailConfig` per inviare OTP e link di recupero.
+- **ConfigModule globale**: tutte le variabili `.env` sono disponibili ovunque senza reimport.
 
-# Stack Tecnologico
+## Moduli principali
 
-## Backend
+| Modulo                 | Responsabilità                                                             | Dipendenze dirette                       |
+| ---------------------- | -------------------------------------------------------------------------- | ---------------------------------------- |
+| `AccountsModule`       | CRUD profili, gestione password/email, esposizione DTO per altri servizi   | TypeORM `Account`, `bcrypt`              |
+| `AuthModule`           | Registrazione con verifica OTP, login JWT, recupero password               | Accounts, Roles, Mail                    |
+| `RolesModule`          | Definizione ruoli e assegnazioni agli account (tabella ponte `user_roles`) | Accounts                                 |
+| `MessagesModule`       | Richieste/feedback verso gli uffici comunali, filtri per stato/tipo        | RequestOffices, Accounts                 |
+| `GravesModule`         | Gestione tombe, coordinate e stato manutentivo                             | RequestOffices, DigitalFlowers, Deceased |
+| `DeceasedModule`       | Anagrafiche defunti collegate alle tombe                                   | Graves                                   |
+| `MunicipalitiesModule` | Censimento comuni, contatti e uffici                                       | MunicipalityContacts, RequestOffices     |
+| `RequestOfficesModule` | Uffici comunali che ricevono messaggi/assegnazioni                         | Municipalities                           |
+| `DigitalFlowersModule` | Invio di tributi digitali con storicizzazione (account → tomba)            | Accounts, Graves                         |
+| `MailModule`           | SMTP wrapper per inviare email transazionali                               | ConfigModule                             |
 
-### <p align="center"><a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="80" alt="NestJS" /></a></p>
- > NestJS segue il pattern MVC e incoraggia la separazione delle responsabilità. Supporta micro‑servizi, REST, GraphQL e WebSocket, fornendo un potente sistema di dependency‑injection e tooling CLI per scaffolding. 
+## Flussi funzionali chiave
 
-### <p align="center"><a href="https://typeorm.io/" target="blank">TypeORM</a></p>
- > TypeORM gestisce la persistenza dei dati su PostgreSQL attraverso un approccio DataMapper/ActiveRecord, migrazioni automatiche e query builder tipizzato. 
+### Registrazione & verifica email
 
-## Database
+1. `POST /auth/register` salva la richiesta in una mappa in-memory con cooldown, genera un OTP a 6 cifre e invia la mail.
+2. `GET /auth/verify?token=` valida l'OTP, crea l'account hashando la password e assegna il ruolo `user`.
 
-### <p align="center"><a href="https://www.postgresql.org/" target="blank">PostgreSQL </p>
-> PostgreSQL è un database relazionale open‑source ACID‑compliant. Utilizzato per la persistenza dei dati delle tombe, dei lotti e degli utenti, con estensioni geospaziali (PostGIS) per la gestione delle coordinate all’interno del cimitero.
+### Login & autorizzazione
 
-## Uso
+- `POST /auth/login` verifica le credenziali, sceglie il ruolo di priorità più alta e firma un JWT.
+- Il token viene inviato sia nell'header `Authorization` che in un cookie HttpOnly.
+- I controller applicano `@UseGuards(JwtAuthGuard, RolesGuard)` e `@Roles(...)` per bloccare endpoint sensibili.
 
-### Project Setup
+### Messaggi di servizio
+
+- `MessagesService` usa `plainToInstance` per restituire DTO sanitizzati con sender/receiver.
+- Filtri disponibili: per `message_type`, tipo (`clean`, `maintenance`, ...), stato (`sent`, `completed`, ...).
+
+### Fiori digitali
+
+- `POST /digital_flowers` permette agli utenti autenticati di dedicare un tributo a una tomba, mantenendo la cronologia.
+- I dati vengono arricchiti con il defunto associato alla tomba per il rendering frontend.
+
+### Gestione enti e tombe
+
+- I comuni hanno un contatto (`MunicipalityContact`) e uno o più uffici richiesta (`RequestOffice`).
+- Le tombe sono collegate a un ufficio (per tracciarne la responsabilità) e a più defunti/digital flowers.
+
+## Configurazione e variabili d'ambiente
+
+| Variabile                               | Descrizione                                                            |
+| --------------------------------------- | ---------------------------------------------------------------------- |
+| `PORT`                                  | Porta HTTP esposta da Nest (default 3000).                             |
+| `DATABASE_URL`                          | Connessione PostgreSQL ( formato `postgres://user:pass@host:port/db`). |
+| `JWT_SECRET` / `JWT_EXPIRES`            | Chiave e TTL del token.                                                |
+| `APP_URL`                               | URL pubblico usato nei link email (verify/reset).                      |
+| `MAIL_HOST`, `MAIL_PORT`, `MAIL_SECURE` | Parametri SMTP.                                                        |
+| `MAIL_USER`, `MAIL_PASS`, `MAIL_FROM`   | Credenziali e mittente predefinito.                                    |
+
+> Le impostazioni SMTP sono centralizzate in `MailConfig`, mentre la configurazione TypeORM è definita in `src/configs/ormconfig.ts` e riusata dalla CLI.
+
+## Setup & comandi
+
 ```bash
-$ pnpm install
+# installazione dipendenze
+pnpm install
+
+# sviluppo
+pnpm run start:dev
+
+# produzione (build + avvio)
+pnpm run build && pnpm run start:prod
+
+# linting e formattazione
+pnpm run lint
+pnpm run format
 ```
 
-## NestJS - Compile and run the project
-```bash
-# development
-$ pnpm run start
+## Testing e qualità
 
-# watch mode
-$ pnpm run start:dev
+- **Unit test** (`pnpm run test`) e **coverage** (`pnpm run test:cov`) tramite Jest + ts-jest.
+- **E2E test** di esempio in `test/app.e2e-spec.ts`; estendere simulando gli scenari più critici (auth, messaggi, autorizzazioni).
+- ValidationPipe globale + class-validator sulle DTO riducono la necessità di controlli manuali.
 
-# production mode
-$ pnpm run start:prod
-```
-## NestJS - Run tests
+## Deployment
 
-```bash
-# unit tests
-$ pnpm run test
+- Il file `vercel.json` consente il deploy serverless su Vercel (`@vercel/node`) puntando all'entry `src/main.ts`.
+- Per ambienti containerizzati è sufficiente esportare le stesse variabili `.env` e lanciare `pnpm run start:prod`.
 
-# e2e tests
-$ pnpm run test:e2e
+## Struttura cartelle
 
-# test coverage
-$ pnpm run test:cov
-```
+- `src/main.ts` – bootstrap Nest con ValidationPipe e ConfigService.
+- `src/app.module.ts` – aggrega tutti i moduli funzionali.
+- `src/configs/` – configurazioni riutilizzabili (TypeORM, Mailer, JWT).
+- `src/modules/**` – cartelle verticali per feature (controller/service/module/dto/entity).
+- `test/` – suite e2e Jest pronta per essere estesa.
+
+---
