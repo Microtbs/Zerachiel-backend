@@ -17,6 +17,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RoleType } from 'src/common/enums/role.enums';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 
+/**
+ * Controller HTTP per i fiori digitali.
+ * Gli endpoint sono protetti da ruoli per distinguere utenti comuni e admin.
+ */
 @Controller('digital_flowers')
 export class DigitalFlowersController {
   constructor(private readonly service: DigitalFlowersService) {}

@@ -1,5 +1,8 @@
 import { IsString, IsNotEmpty, MaxLength, IsInt } from 'class-validator';
 
+/**
+ * DTO utilizzato per agganciare un ufficio a un determinato comune.
+ */
 export class CreateRequestOfficeDto {
   @IsString()
   @IsNotEmpty()

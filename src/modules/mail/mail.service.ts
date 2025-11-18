@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
+/**
+ * Wrapper del MailerModule pensato per inviare le comunicazioni applicative.
+ * Centralizza i template HTML e la composizione dinamica dei link.
+ */
 @Injectable()
 export class MailService {
   transporter: any;
@@ -11,8 +15,7 @@ export class MailService {
   ) {}
 
   async sendVerificationEmail(email: string, token: number) {
-    const appUrl = this.configService.get('APP_URL');
-    //const appUrl = 'https://zerachiel-frontend.vercel.app/login';
+    const appUrl = this.configService.get<string>('APP_URL') ?? '';
     await this.mailerService.sendMail({
       to: email,
       subject: 'Conferma la tua registrazione',
@@ -25,7 +28,6 @@ export class MailService {
   }
 
   async sendRecoverEmail(email: string, token: number) {
-    const appUrl = this.configService.get('APP_URL');
     await this.mailerService.sendMail({
       to: email,
       subject: 'Recupera la tua password',

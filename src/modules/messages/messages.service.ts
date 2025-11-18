@@ -13,11 +13,15 @@ import {
   message_type,
 } from '../../common/enums/message.enums';
 
+/**
+ * Incapsula la logica di gestione delle richieste di servizio e feedback.
+ * Tutte le risposte vengono trasformate in DTO per isolare l'entity.
+ */
 @Injectable()
 export class MessagesService {
   constructor(
     @InjectRepository(Message) private readonly repo: Repository<Message>,
-  ) { }
+  ) {}
 
   create(CreateMessageDto: CreateMessageDto): Promise<Message> {
     const Grave = this.repo.create(CreateMessageDto);

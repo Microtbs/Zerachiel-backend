@@ -5,6 +5,9 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CreateMunicipalityContactDto } from './dto/create-municipality_contact.dto';
 import { UpdateMunicipalityContactDto } from './dto/update-municipality_contact.dto';
 
+/**
+ * Mantiene i recapiti istituzionali dei comuni (telefono, PEC, sito).
+ */
 @Injectable()
 export class MunicipalityContactsService {
   constructor(

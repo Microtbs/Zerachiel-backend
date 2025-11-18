@@ -17,6 +17,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 import { RoleType } from 'src/common/enums/role.enums';
 
+/**
+ * API per creare e consultare i contatti istituzionali legati ai comuni.
+ */
 @Controller('municipality_contacts')
 export class MunicipalityContactsController {
   constructor(

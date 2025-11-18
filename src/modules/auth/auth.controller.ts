@@ -4,6 +4,10 @@ import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
 
+/**
+ * Controller degli endpoint pubblici di autenticazione.
+ * Incapsula la logica di restituzione dei messaggi e la gestione del cookie JWT.
+ */
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -20,6 +24,7 @@ export class AuthController {
     @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    // restituiamo il token sia via header che via cookie HttpOnly per il frontend
     const { access_token } = await this.authService.login(dto);
     res.setHeader('Authorization', `Bearer ${access_token}`);
     res.cookie('Token', access_token, {

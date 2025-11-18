@@ -8,6 +8,9 @@ import {
 } from 'typeorm';
 import { Grave } from '../../graves/entities/grave.entity';
 
+/**
+ * Entità anagrafica dei defunti sepolti nel cimitero.
+ */
 @Entity('deceased')
 export class Deceased {
   @PrimaryGeneratedColumn()

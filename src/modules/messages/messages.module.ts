@@ -4,10 +4,13 @@ import { MessagesService } from './messages.service';
 import { MessagesController } from './messages.controller';
 import { Message } from './entities/message.entity';
 
+/**
+ * Modulo dedicato alla gestione centralizzata delle richieste/feedback.
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([Message])],
   controllers: [MessagesController],
   providers: [MessagesService],
   exports: [MessagesService],
 })
-export class MessagesModule { }
+export class MessagesModule {}

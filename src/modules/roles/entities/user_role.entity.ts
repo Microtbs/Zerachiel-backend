@@ -8,8 +8,12 @@ import {
 import { Account } from 'src/modules/accounts/entities/account.entity';
 import { Role } from 'src/modules/roles/entities/role.entity';
 
+/**
+ * Tabella ponte che collega un account a uno specifico ruolo.
+ * La unique constraint impedisce assegnazioni duplicate.
+ */
 @Entity('user_roles')
-@Unique(['account', 'role']) // Non sono certo del suo utilizzo
+@Unique(['account', 'role'])
 export class UserRole {
   @PrimaryGeneratedColumn()
   id: number;

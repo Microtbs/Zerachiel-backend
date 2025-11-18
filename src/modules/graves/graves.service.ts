@@ -5,6 +5,9 @@ import { Grave } from './entities/grave.entity';
 import { CreateGravesDto } from './dto/create-graves.dto';
 import { UpdateGravesDto } from './dto/update-graves.dto';
 
+/**
+ * Gestisce i record delle tombe e mantiene la coerenza con gli uffici richieste.
+ */
 @Injectable()
 export class GravesService {
   constructor(

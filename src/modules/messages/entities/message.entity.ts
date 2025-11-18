@@ -13,6 +13,9 @@ import {
   message_type,
 } from '../../../common/enums/message.enums';
 
+/**
+ * Entity TypeORM che rappresenta sia richieste che feedback gestiti dagli uffici.
+ */
 @Entity('messages')
 export class Message {
   @PrimaryGeneratedColumn()

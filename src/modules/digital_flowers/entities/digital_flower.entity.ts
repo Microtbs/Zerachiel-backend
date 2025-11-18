@@ -11,6 +11,9 @@ import { Account } from '../../accounts/entities/account.entity';
 import { Grave } from '../../graves/entities/grave.entity';
 import { FlowerType } from '../../../common/enums/flower.enums';
 
+/**
+ * Snapshot di un tributo digitale inviato da un utente verso una tomba.
+ */
 @Entity('digital_flowers')
 export class DigitalFlower {
   @PrimaryGeneratedColumn()

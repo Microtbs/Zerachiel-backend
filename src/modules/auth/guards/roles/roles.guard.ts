@@ -3,6 +3,10 @@ import { Reflector } from '@nestjs/core';
 import { RoleType } from 'src/common/enums/role.enums';
 import { ROLES_KEY } from '../../decorators/roles.decorator';
 
+/**
+ * Guard che applica una gerarchia di privilegi ai ruoli.
+ * Consente di proteggere endpoint indicando il livello minimo richiesto.
+ */
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}

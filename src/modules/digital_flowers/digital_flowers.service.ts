@@ -5,6 +5,11 @@ import { DigitalFlower } from './entities/digital_flower.entity';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
 import { DigitalFlowerResponseDTO } from './dto/digital_flower-response.dto';
+
+/**
+ * Gestisce la logica per la creazione e consultazione dei fiori digitali
+ * inviati dagli utenti alle tombe dei propri cari.
+ */
 @Injectable()
 export class DigitalFlowersService {
   constructor(
@@ -12,6 +17,9 @@ export class DigitalFlowersService {
     private readonly repo: Repository<DigitalFlower>,
   ) {}
 
+  /**
+   * Restituisce l'elenco dei fiori arricchendo i dati con sender e defunto.
+   */
   async findAll(): Promise<DigitalFlowerResponseDTO[]> {
     const digitalFlowers = await this.repo.find({
       relations: ['sender', 'grave', 'grave.deceased'],

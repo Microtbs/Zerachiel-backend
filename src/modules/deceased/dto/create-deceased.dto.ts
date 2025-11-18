@@ -6,6 +6,9 @@ import {
   IsInt,
 } from 'class-validator';
 
+/**
+ * DTO per registrare un nuovo defunto e legarlo opzionalmente a una tomba.
+ */
 export class CreateDeceasedDto {
   @IsString()
   @IsNotEmpty()

@@ -7,6 +7,10 @@ import {
   Length,
 } from 'class-validator';
 
+/**
+ * Payload standard per registrare un nuovo account.
+ * Utilizzato sia dall'AuthController sia dagli amministratori.
+ */
 export class CreateAccountDto {
   @IsNotEmpty()
   @IsString()

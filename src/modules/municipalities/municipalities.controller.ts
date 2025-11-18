@@ -17,6 +17,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 import { RoleType } from 'src/common/enums/role.enums';
 
+/**
+ * Espone API per consultare e amministrare i comuni censiti nel sistema.
+ */
 @Controller('municipalities')
 export class MunicipalitiesController {
   constructor(private readonly service: MunicipalitiesService) {}

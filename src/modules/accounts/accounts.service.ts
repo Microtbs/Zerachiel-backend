@@ -12,6 +12,10 @@ import { AccountResponseDTO } from './dto/account-response.dto';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
 
+/**
+ * Servizio applicativo responsabile della gestione degli account
+ * (registrazione, profili, ruoli e dati sensibili come email/password).
+ */
 @Injectable()
 export class AccountsService {
   constructor(
@@ -33,6 +37,10 @@ export class AccountsService {
     return account;
   }
 
+  /**
+   * Recupera l'account con i ruoli associati e li serializza
+   * in un DTO minimale da esporre verso i client o altri servizi.
+   */
   async getRoleOfAccount(id: number): Promise<AccountResponseDTO> {
     const account = await this.repo.findOne({
       where: { id },
@@ -62,6 +70,10 @@ export class AccountsService {
     if (!account) throw new NotFoundException('Account not found');
     return account;
   }
+  /**
+   * Aggiorna la password verificando l'attuale hash e ricalcolandone uno nuovo.
+   * Utilizzato dal profilo utente dopo autenticazione.
+   */
   async editPassword(id: number, updateAccountDto: UpdateSensitiveDto) {
     const { currentPassword, newPassword } = updateAccountDto;
     const account = await this.repo.findOneBy({ id });
@@ -84,6 +96,11 @@ export class AccountsService {
       account: await this.repo.save(account),
     };
   }
+
+  /**
+   * Metodo usato esclusivamente dal flusso di recupero password (mail).
+   * Forza l'aggiornamento dell'hash conoscendo solo l'email.
+   */
   async forceEditPassword(email: string, newPassword: string) {
     const account = await this.repo.findOne({ where: { email } });
     if (!account) throw new NotFoundException('Account not found');

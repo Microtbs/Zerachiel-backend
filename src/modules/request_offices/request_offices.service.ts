@@ -6,6 +6,9 @@ import { CreateRequestOfficeDto } from './dto/create-request_office.dto';
 import { UpdateRequestOfficeDto } from './dto/update-request_office.dto';
 import { Municipality } from '../municipalities/entities/municipality.entity';
 
+/**
+ * Gestisce gli uffici comunali responsabili delle richieste sul cimitero.
+ */
 @Injectable()
 export class RequestOfficesService {
   constructor(

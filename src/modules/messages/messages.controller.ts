@@ -21,6 +21,9 @@ import { RoleType } from 'src/common/enums/role.enums';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 
+/**
+ * REST controller per creare, cercare e aggiornare i messaggi/mandati.
+ */
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}

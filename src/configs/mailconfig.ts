@@ -1,6 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { MailerOptions } from '@nestjs-modules/mailer';
 
+/**
+ * Factory centralizzata per creare le opzioni del MailerModule.
+ * In questo modo possiamo leggere tutte le variabili d'ambiente da un unico punto
+ * e mantenere consistente la configurazione dell'SMTP.
+ */
 export class MailConfig {
   static createMailerOptions(config: ConfigService): MailerOptions {
     return {

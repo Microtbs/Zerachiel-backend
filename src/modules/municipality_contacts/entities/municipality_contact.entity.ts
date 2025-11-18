@@ -7,6 +7,9 @@ import {
 } from 'typeorm';
 import { Municipality } from '../../municipalities/entities/municipality.entity';
 
+/**
+ * Contatti ufficiali (telefono, email, PEC) per comunicare con il comune.
+ */
 @Entity('municipality_contacts')
 export class MunicipalityContact {
   @PrimaryGeneratedColumn()

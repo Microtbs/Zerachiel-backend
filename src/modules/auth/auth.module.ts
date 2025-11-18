@@ -9,6 +9,10 @@ import { jwtConfig } from '../../configs/jwtconfig';
 import { MailModule } from '../mail/mail.module';
 import { RolesModule } from '../roles/roles.module';
 
+/**
+ * Raggruppa controller, servizi e strategy necessari per login/registrazione.
+ * Importa Accounts, Mail e Roles per orchestrare i flussi di onboarding.
+ */
 @Module({
   imports: [
     AccountsModule,

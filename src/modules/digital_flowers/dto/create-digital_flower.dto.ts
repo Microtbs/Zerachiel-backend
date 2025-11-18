@@ -1,6 +1,9 @@
-import { IsNotEmpty, Length, IsInt, Min } from 'class-validator';
+import { IsNotEmpty, IsInt } from 'class-validator';
 import { FlowerType } from '../../../common/enums/flower.enums';
 
+/**
+ * DTO per l'invio di un fiore digitale a una tomba specifica.
+ */
 export class CreateDigitalFlowersDto {
   @IsNotEmpty() // non può essere vuota
   //@Length(2, 30) // deve avere minimo 2 caratteri, massimo 30
@@ -18,4 +21,3 @@ export class CreateDigitalFlowersDto {
   // @Min(1) // l'ID della tomba deve esistere (>0)
   grave_id: number;
 }
-

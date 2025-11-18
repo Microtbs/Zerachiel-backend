@@ -5,6 +5,9 @@ import { Municipality } from './entities/municipality.entity';
 import { CreateMunicipalityDto } from './dto/create-municipality.dto';
 import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
 
+/**
+ * Service che coordina i comuni, i contatti e i relativi uffici richieste.
+ */
 @Injectable()
 export class MunicipalitiesService {
   constructor(

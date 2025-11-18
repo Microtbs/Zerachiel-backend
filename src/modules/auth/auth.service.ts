@@ -12,8 +12,17 @@ import { RoleType } from 'src/common/enums/role.enums';
 import { MailService } from '../mail/mail.service';
 import { RolesService } from '../roles/roles.service';
 
+/**
+ * Contiene tutta la business logic di autenticazione:
+ * registrazione con verifica e-mail, login JWT e flussi di reset password.
+ */
 @Injectable()
 export class AuthService {
+  /**
+   * Mappa temporanea dei token di verifica generati lato server.
+   * Tenere i dati in memoria consente di ridurre la superficie del DB
+   * e applicare facilmente cooldown e scadenze.
+   */
   private verificationTokens = new Map<
     number,
     {
@@ -30,6 +39,10 @@ export class AuthService {
     private rolesService: RolesService,
   ) {}
 
+  /**
+   * Avvia la registrazione memorizzando temporaneamente la richiesta
+   * e inviando un token OTP via e-mail per confermare l'indirizzo.
+   */
   async register(dto: RegisterDto) {
     const existing = await this.accountsService
       .findByEmail(dto.email)
@@ -58,6 +71,7 @@ export class AuthService {
       if (oldToken) this.verificationTokens.delete(oldToken);
     }
 
+    // OTP numerico a 6 cifre
     const verificationToken: number = Math.floor(
       100000 + Math.random() * 900000,
     );
@@ -71,6 +85,7 @@ export class AuthService {
     this.verificationTokens.set(verificationToken, entry);
 
     // Massimo una richiesta ogni 2 minuti
+    // sblocca il cooldown dopo 2 minuti
     setTimeout(
       () => {
         const current = this.verificationTokens.get(verificationToken);
@@ -81,6 +96,7 @@ export class AuthService {
       2 * 60 * 1000,
     );
 
+    // elimina il token dopo 15 minuti
     setTimeout(
       () => {
         this.verificationTokens.delete(verificationToken);
@@ -101,6 +117,10 @@ export class AuthService {
       message: 'Abbiamo inviato una mail di verifica nella tua casella.',
     };
   }
+  /**
+   * Completa la registrazione verificando il token OTP
+   * e creando l'account reale su database.
+   */
   async verifyEmail(token: number) {
     token = Number(token);
     const tokenData = this.verificationTokens.get(token);
@@ -129,6 +149,10 @@ export class AuthService {
     return { message: 'Email verificata con successo!' };
   }
 
+  /**
+   * Autentica un utente determinando anche il ruolo più elevato
+   * per semplificare l'autorizzazione client-side e server-side.
+   */
   async login(dto: LoginDto) {
     const user = await this.accountsService.findByEmail(dto.email);
     const rolePriority: Record<RoleType, number> = {
@@ -162,6 +186,10 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+  /**
+   * Mappa i codici one-time per il reset password.
+   * Il funzionamento è simile alla verifica email ma salvando solo l'indirizzo.
+   */
   private resetTokens = new Map<
     number,
     {

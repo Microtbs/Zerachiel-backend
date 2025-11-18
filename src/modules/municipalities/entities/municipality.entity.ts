@@ -8,6 +8,10 @@ import {
   OneToMany,
 } from 'typeorm';
 import { RequestOffice } from '../../request_offices/entities/request_office.entity';
+
+/**
+ * Entità che rappresenta l'ente comunale proprietario del cimitero.
+ */
 @Entity('municipalities')
 export class Municipality {
   @PrimaryGeneratedColumn()

@@ -4,6 +4,9 @@ import { AccountsService } from './accounts.service';
 import { AccountsController } from './accounts.controller';
 import { Account } from './entities/account.entity';
 
+/**
+ * Modulo responsabile degli utenti registrati e riutilizzabile da altri servizi.
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([Account])],
   controllers: [AccountsController],

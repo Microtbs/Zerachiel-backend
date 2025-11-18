@@ -3,6 +3,10 @@ import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from 'typeorm';
 import { DigitalFlower } from '../../digital_flowers/entities/digital_flower.entity';
 import { UserRole } from '../../roles/entities/user_role.entity';
 
+/**
+ * Modello persistente per gli utenti registrati.
+ * Include relazioni bidirezionali con messaggi, fiori digitali e ruoli assegnati.
+ */
 @Entity('accounts')
 export class Account {
   @PrimaryGeneratedColumn()

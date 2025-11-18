@@ -33,6 +33,10 @@ export class UpdateAccountDto {
   date_of_birth?: Date;
 }
 
+/**
+ * DTO per aggiornare i dati sensibili direttamente dal proprio profilo.
+ * Contiene campi opzionali così da poter essere riutilizzato su più endpoint.
+ */
 export class UpdateSensitiveDto {
   @IsOptional()
   @IsString()

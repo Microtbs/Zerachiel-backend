@@ -2,6 +2,9 @@ import { RoleType } from '../../../common/enums/role.enums';
 import { UserRole } from './user_role.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * Tabella dei ruoli disponibili nell'applicazione.
+ */
 @Entity('roles')
 export class Role {
   @PrimaryGeneratedColumn()

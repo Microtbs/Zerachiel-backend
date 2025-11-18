@@ -15,14 +15,17 @@ import { AccountsModule } from './modules/accounts/accounts.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { MailModule } from './modules/mail/mail.module';
 
+/**
+ * Root module che compone tutti i moduli funzionali dell'applicazione.
+ * Qui rendiamo le variabili d'ambiente globali e inizializziamo TypeORM
+ * con la configurazione condivisa.
+ */
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), // Carica il file .env (se non esiste, non darà errore)
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     TypeOrmModule.forRootAsync({
-      // Configura TypeORM in modo asincrono
-      useFactory: () => ormConfig, // Usa la configurazione definita in ormconfig.ts
+      useFactory: () => ormConfig,
     }),
-    // Importa qui i tuoi Moduli
     AccountsModule,
     GravesModule,
     MunicipalityContactsModule,

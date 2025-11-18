@@ -1,6 +1,9 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { RolesService } from './roles.service';
 
+/**
+ * Espone endpoint semplici per consultare ruoli e assegnarli agli account.
+ */
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
@@ -19,16 +22,13 @@ export class RolesController {
     @Param('account_id') accountId: number,
     @Param('role_id') roleId: number,
   ) {
-    const assign = await this.rolesService.createRoleofAccount(
-      +accountId,
-      +roleId,
-    );
+    await this.rolesService.createRoleofAccount(+accountId, +roleId);
     return { message: 'Role assigned successfully' };
   }
 
   @Delete('AssignRole/:account_id')
-  removeRole(@Param('account_id') accountId: number) {
-    const deleteRole = this.rolesService.removeRoleOfAccount(+accountId);
+  async removeRole(@Param('account_id') accountId: number) {
+    await this.rolesService.removeRoleOfAccount(+accountId);
     return { message: 'Role removed successfully' };
   }
 }

@@ -10,6 +10,9 @@ import { RequestOffice } from '../../request_offices/entities/request_office.ent
 import { Deceased } from '../../deceased/entities/deceased.entity';
 import { DigitalFlower } from '../../digital_flowers/entities/digital_flower.entity';
 
+/**
+ * Entità che rappresenta una tomba con coordinate e stato manutentivo.
+ */
 @Entity('graves')
 export class Grave {
   @PrimaryGeneratedColumn()

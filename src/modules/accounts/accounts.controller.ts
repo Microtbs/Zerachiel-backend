@@ -17,6 +17,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 import { UpdateSensitiveDto } from './dto/update-account.dto';
 
+/**
+ * Espone gli endpoint REST relativi agli account utente.
+ * Gestisce registrazione, profili e gestione credenziali con i relativi guard.
+ */
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountService: AccountsService) {}
@@ -43,6 +47,10 @@ export class AccountsController {
     return this.accountService.getRoleOfAccount(+id);
   }
 
+  /**
+   * Entry point dinamico per aggiornare campi specifici
+   * (es. editPassword, editEmail) basandosi sul parametro di rotta.
+   */
   @Patch('edit/:parameter')
   editAccount(
     @Param('parameter') parameter: string,

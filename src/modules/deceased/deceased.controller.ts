@@ -16,6 +16,9 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RoleType } from 'src/common/enums/role.enums';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+/**
+ * API per gestire i dati anagrafici dei defunti e collegarli alle tombe.
+ */
 @Controller('deceased')
 export class DeceasedController {
   constructor(private readonly deceasedService: DeceasedService) {}

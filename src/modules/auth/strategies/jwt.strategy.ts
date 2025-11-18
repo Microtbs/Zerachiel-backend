@@ -4,6 +4,10 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtConfig } from '../../../configs/jwtconfig';
 import { AuthService } from '../auth.service';
 
+/**
+ * Strategy Passport che valida il token JWT inviato via header Authorization.
+ * Il payload viene ridotto alle proprietà utili e iniettato nella Request Nest.
+ */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {

@@ -1,17 +1,13 @@
-import {
-  IsString,
-  IsInt,
-  IsNotEmpty,
-  isNotEmpty,
-  isInt,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 import {
   msgStatus,
   msgType,
   message_type,
 } from '../../../common/enums/message.enums';
 
+/**
+ * DTO per l'apertura di una richiesta di servizio o per inviare un feedback.
+ */
 export class CreateMessageDto {
   @IsNotEmpty()
   message_type: message_type;

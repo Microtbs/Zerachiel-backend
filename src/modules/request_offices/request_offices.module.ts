@@ -6,6 +6,9 @@ import { RequestOfficesController } from './request_offices.controller';
 
 import { Municipality } from '../municipalities/entities/municipality.entity';
 
+/**
+ * Modulo che mette a disposizione gli uffici comunali e gestisce le loro relazioni.
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([RequestOffice, Municipality])],
   controllers: [RequestOfficesController],

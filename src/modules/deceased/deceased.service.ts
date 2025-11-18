@@ -1,14 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
-import { Deceased } from "./entities/deceased.entity"
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository } from 'typeorm';
+import { Deceased } from './entities/deceased.entity';
 
 import { CreateDeceasedDto } from './dto/create-deceased.dto';
 import { UpdateDeceasedDto } from './dto/update-deceased.dto';
 
+/**
+ * CRUD service per i defunti indicizzati nel sistema.
+ */
 @Injectable()
 export class DeceasedService {
-  constructor(@InjectRepository(Deceased) private readonly repo: Repository<Deceased>) { }
+  constructor(
+    @InjectRepository(Deceased) private readonly repo: Repository<Deceased>,
+  ) {}
 
   create(createUserDto: CreateDeceasedDto): Promise<Deceased> {
     const deceased = this.repo.create(createUserDto);
@@ -24,7 +29,10 @@ export class DeceasedService {
     if (!deceased) throw new NotFoundException('Deceased not found');
     return deceased;
   }
-  async update(id: number, updateDeceasedDto: UpdateDeceasedDto): Promise<Deceased> {
+  async update(
+    id: number,
+    updateDeceasedDto: UpdateDeceasedDto,
+  ): Promise<Deceased> {
     const deceased = await this.repo.findOneBy({ id });
     if (!deceased) throw new NotFoundException('Deceased not found');
     return this.repo.save({ id, ...updateDeceasedDto });
@@ -36,5 +44,3 @@ export class DeceasedService {
     return this.repo.delete(id);
   }
 }
-
-

@@ -5,6 +5,9 @@ import { RolesController } from './roles.controller';
 import { Role } from './entities/role.entity';
 import { AccountsModule } from '../accounts/accounts.module';
 
+/**
+ * Gestisce le definizioni di ruolo e le assegnazioni verso gli account.
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([Role]), AccountsModule],
   controllers: [RolesController],

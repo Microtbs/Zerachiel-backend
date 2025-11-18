@@ -17,6 +17,9 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RoleType } from 'src/common/enums/role.enums';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 
+/**
+ * Controller REST per la gestione delle tombe nel cimitero digitale.
+ */
 @Controller('graves')
 export class GravesController {
   constructor(private readonly gravesService: GravesService) {}

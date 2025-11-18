@@ -1,5 +1,8 @@
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
+/**
+ * Definisce i campi richiesti per censire una nuova tomba.
+ */
 export class CreateGravesDto {
   @IsNumber()
   longitude: number;
