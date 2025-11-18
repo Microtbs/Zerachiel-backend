@@ -18,6 +18,29 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+
+    if (!user || !user.roles) return false;
+
+    const userRole = user.roles as RoleType;
+
+    // Aggiunto per impostare la gerarchia dei ruoli
+    const rolePriority: Record<RoleType, number> = {
+      [RoleType.USER]: 1,
+      [RoleType.CARETAKER]: 2,
+      [RoleType.STONEMASON]: 3,
+      [RoleType.OFFICER]: 4,
+      [RoleType.ADMIN]: 5,
+    };
+
+    const userLevel = rolePriority[userRole];
+
+    const requiredLevel = Math.min(
+      ...requiredRoles.map((role) => rolePriority[role]),
+    );
+
+    return userLevel >= requiredLevel;
     const user = context.switchToHttp().getRequest().user;
 
     if (!user || !user.roles) return false;

@@ -3,4 +3,5 @@ export enum RoleType {
   CARETAKER = 'caretaker',
   STONEMASON = 'stonemason',
   OFFICER = 'officer',
+  ADMIN = 'admin',
 }

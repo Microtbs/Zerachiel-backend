@@ -157,6 +157,37 @@ export class AuthService {
     return { message: 'Email verificata con successo!' };
   }
 
+  async login(dto: LoginDto) {
+    const user = await this.accountsService.findByEmail(dto.email);
+    const rolePriority: Record<RoleType, number> = {
+      [RoleType.USER]: 1,
+      [RoleType.CARETAKER]: 2,
+      [RoleType.STONEMASON]: 3,
+      [RoleType.OFFICER]: 4,
+      [RoleType.ADMIN]: 5,
+    };
+    const roleData = await this.accountsService.getRoleOfAccount(user.id);
+
+    const roles: RoleType[] =
+      roleData?.roles?.map((r) => r.type as RoleType) || [];
+
+    if (roles.length === 0) {
+      throw new UnauthorizedException('Nessun ruolo assegnato');
+    }
+
+    const selectedRole = roles.reduce((prev, curr) => {
+      return rolePriority[curr] > rolePriority[prev] ? curr : prev;
+    }, roles[0]);
+
+    const isValid = await bcrypt.compare(dto.password, user.hashed_password);
+    if (!isValid) throw new UnauthorizedException('Credenziali errate');
+
+    const payload = {
+      sub: user.id,
+      roles: selectedRole,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
   private resetTokens = new Map<
     number,
     {

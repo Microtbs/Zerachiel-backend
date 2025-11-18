@@ -6,8 +6,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Patch,
-  Req,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -15,7 +13,6 @@ import { RoleType } from 'src/common/enums/role.enums';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
-import { UpdateSensitiveDto } from './dto/update-account.dto';
 
 @Controller('accounts')
 export class AccountsController {

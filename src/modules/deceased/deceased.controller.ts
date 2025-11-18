@@ -26,17 +26,20 @@ export class DeceasedController {
   create(@Body() createDeceasedDto: CreateDeceasedDto) {
     return this.deceasedService.create(createDeceasedDto);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.OFFICER)
   @Get()
   findAll() {
     return this.deceasedService.findAll();
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.USER)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.deceasedService.findOne(+id);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.OFFICER)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -44,7 +47,8 @@ export class DeceasedController {
   ) {
     return this.deceasedService.update(+id, updateDeceasedDto);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.OFFICER)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.deceasedService.remove(+id);
