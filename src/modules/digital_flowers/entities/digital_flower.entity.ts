@@ -4,32 +4,43 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { Grave } from '../../graves/entities/graves.entity';
 
-@Entity()
-export class DigitalFlowers {
+import { Account } from '../../accounts/entities/account.entity';
+import { Grave } from '../../graves/entities/grave.entity';
+import { FlowerType } from '../../../common/enums/flower.enums';
+
+@Entity('digital_flowers')
+export class DigitalFlower {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30 })
-  type: string;
+  @Column({ type: 'enum', enum: FlowerType, default: FlowerType.OTHER })
+  type: FlowerType;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
   @Column({ type: 'int' })
-  duration: number;
+  id_sender: number;
 
   @Column({ type: 'int' })
-  user_id: number;
+  id_grave: number;
 
-  @Column({ type: 'int' })
-  grave_id: number;
+  /*@ManyToOne(() => Account, account => account.sentMessages, { onDelete: 'CASCADE' })
+  sender: Account;
 
-  @ManyToOne(() => User, (user) => user.id, {})
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-  //eager: true
-  @ManyToOne(() => Grave, (grave) => grave.id, {})
-  @JoinColumn({ name: 'grave_id' })
+  @ManyToOne(() => Grave, grave => grave.deceased, { onDelete: 'CASCADE', nullable: true })
+  grave: Grave;*/
+
+  @ManyToOne(() => Account, (account) => account.digitalFlowers, {
+    eager: false,
+  })
+  @JoinColumn({ name: 'id_sender' })
+  sender: Account;
+
+  @ManyToOne(() => Grave, (grave) => grave.digitalFlowers, { eager: false })
+  @JoinColumn({ name: 'id_grave' })
   grave: Grave;
 }

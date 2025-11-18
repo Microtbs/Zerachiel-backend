@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { Grave } from './entities/graves.entity';
+import { Grave } from './entities/grave.entity';
 import { CreateGravesDto } from './dto/create-graves.dto';
 import { UpdateGravesDto } from './dto/update-graves.dto';
 

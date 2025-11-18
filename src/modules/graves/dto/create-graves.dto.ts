@@ -17,9 +17,5 @@ export class CreateGravesDto {
   section: string;
 
   @IsNumber()
-  caretaker_id: number;
-
-  @IsNumber()
   request_office_id: number;
 }
-

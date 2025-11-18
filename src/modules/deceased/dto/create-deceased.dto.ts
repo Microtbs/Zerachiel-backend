@@ -1,24 +1,27 @@
-import { IsNotEmpty, IsString, IsDate, IsNumber } from "class-validator";
+import {
+  IsString,
+  IsNotEmpty,
+  IsDateString,
+  IsOptional,
+  IsInt,
+} from 'class-validator';
+
 export class CreateDeceasedDto {
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
 
-    @IsNotEmpty()
-    @IsString()
-    first_name: string;
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
 
-    @IsNotEmpty()
-    @IsString()
-    last_name: string;
+  @IsDateString()
+  dob: string;
 
-    @IsNotEmpty()
-    @IsDate()
-    dob: Date;
+  @IsDateString()
+  dod: string;
 
-    @IsNotEmpty()
-    @IsDate()
-    dod: Date;
-
-    @IsNotEmpty()
-    @IsNumber()
-    grave_id: number;
-
+  @IsOptional()
+  @IsInt()
+  id_grave?: number;
 }
