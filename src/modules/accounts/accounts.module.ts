@@ -1,14 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountsService } from './accounts.service';
 import { AccountsController } from './accounts.controller';
 import { Account } from './entities/account.entity';
+import { RolesModule } from '../roles/roles.module';
 
 /**
  * Modulo responsabile degli utenti registrati e riutilizzabile da altri servizi.
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([Account])],
+  imports: [TypeOrmModule.forFeature([Account]), forwardRef(() => RolesModule)],
   controllers: [AccountsController],
   providers: [AccountsService],
   exports: [AccountsService],

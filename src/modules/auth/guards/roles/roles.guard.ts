@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { RoleType } from 'src/common/enums/role.enums';
 import { ROLES_KEY } from '../../decorators/roles.decorator';
+import { JwtRequest } from '../../interfaces/jwt-request.interface';
 
 /**
  * Guard che applica una gerarchia di privilegi ai ruoli.
@@ -21,7 +22,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<JwtRequest>();
     const user = request.user;
 
     if (!user || !user.roles) return false;

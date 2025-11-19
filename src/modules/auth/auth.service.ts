@@ -65,7 +65,7 @@ export class AuthService {
 
       // Se il cooldown e' scaduto elimina il vecchio token
       const oldToken = [...this.verificationTokens.entries()].find(
-        ([_, val]) => val.dto.email === dto.email,
+        ([, val]) => val.dto.email === dto.email,
       )?.[0];
 
       if (oldToken) this.verificationTokens.delete(oldToken);
@@ -111,6 +111,7 @@ export class AuthService {
       );
     } catch (e) {
       throw new BadRequestException('Errore invio email di verifica');
+      console.log(e); // Per debug
     }
 
     return {
@@ -199,7 +200,7 @@ export class AuthService {
     }
   >();
   async requestPasswordReset(email: string) {
-    const account = await this.accountsService.findByEmail(email);
+    await this.accountsService.findByEmail(email);
 
     const existing = [...this.resetTokens.values()].find(
       (t) => t.email === email,
@@ -211,7 +212,7 @@ export class AuthService {
     }
 
     const oldToken = [...this.resetTokens.entries()].find(
-      ([_, t]) => t.email === email,
+      ([, t]) => t.email === email,
     )?.[0];
     if (oldToken) this.resetTokens.delete(oldToken);
 

@@ -8,6 +8,7 @@ import { AuthService } from '../auth.service';
  * Strategy Passport che valida il token JWT inviato via header Authorization.
  * Il payload viene ridotto alle proprietà utili e iniettato nella Request Nest.
  */
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
@@ -17,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { sub: number; roles: string }) {
+  validate(payload: { sub: number; roles: string }) {
     return { id: payload.sub, roles: payload.roles };
   }
 }
