@@ -1,16 +1,19 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto, UpdateSensitiveDto } from './dto/update-account.dto';
 import { AccountResponseDTO } from './dto/account-response.dto';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
+import { RolesService } from '../roles/roles.service';
 
 /**
  * Servizio applicativo responsabile della gestione degli account
@@ -20,6 +23,7 @@ import { UnauthorizedException } from '@nestjs/common';
 export class AccountsService {
   constructor(
     @InjectRepository(Account) private readonly repo: Repository<Account>,
+    @Inject(forwardRef(() => RolesService)) private rolesService: RolesService,
   ) {}
 
   create(createAccountDto: CreateAccountDto): Promise<Account> {
@@ -122,9 +126,15 @@ export class AccountsService {
     const account = await this.repo.findOneBy({ id });
     if (!account) throw new NotFoundException('Account not found');
     account.email = newEmail;
+    const accountEdited = await this.repo.save(account);
     return {
       message: 'Email updated successfully',
-      account: await this.repo.save(account),
+      account: {
+        id: accountEdited.id,
+        first_name: accountEdited.first_name,
+        last_name: accountEdited.last_name,
+        email: accountEdited.email,
+      } as AccountResponseDTO,
     };
   }
 
@@ -136,10 +146,14 @@ export class AccountsService {
     if (!account) throw new NotFoundException('Account not found');
     return this.repo.save({ id, ...updateAccountDto });
   }
-
-  async remove(id: number): Promise<DeleteResult> {
+  // prima rimuovi ruolo da removeRoleOfAccount si role.service e poi rimuovi account
+  async remove(id: number): Promise<{ message: string }> {
     const user = await this.repo.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
-    return this.repo.delete(id);
+    await this.rolesService.removeRoleOfAccount(id);
+    await this.repo.delete(id);
+    return {
+      message: 'Account removed successfully',
+    };
   }
 }

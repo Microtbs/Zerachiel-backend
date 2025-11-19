@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
@@ -14,7 +19,8 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-    private readonly accountService: AccountsService,
+    @Inject(forwardRef(() => AccountsService))
+    private accountsService: AccountsService,
   ) {}
 
   async findAll(): Promise<Role[]> {
@@ -37,7 +43,7 @@ export class RolesService {
     role_id: number,
   ): Promise<UserRole> {
     const alreadyHasRole = (
-      await this.accountService.findOne(account_id)
+      await this.accountsService.findOne(account_id)
     ).userRoles.some((ur) => ur.role.id === role_id);
 
     if (alreadyHasRole) {
