@@ -8,6 +8,7 @@ import {
   UseGuards,
   Patch,
   Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -17,14 +18,19 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 import { UpdateAccountDto, UpdateSensitiveDto } from './dto/update-account.dto';
 import { JwtRequest } from 'src/modules/auth/interfaces/jwt-request.interface';
+import { RolesService } from '../roles/roles.service';
 
 /**
  * Espone gli endpoint REST relativi agli account utente.
  * Gestisce registrazione, profili e gestione credenziali con i relativi guard.
  */
+
 @Controller('accounts')
 export class AccountsController {
-  constructor(private readonly accountService: AccountsService) {}
+  constructor(
+    private readonly accountService: AccountsService,
+    private readonly rolesService: RolesService,
+  ) {}
 
   @Post()
   create(@Body() createAccountDto: CreateAccountDto) {
@@ -38,9 +44,36 @@ export class AccountsController {
     return this.accountService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  async findOne(@Req() req: JwtRequest) {
+    const account = await this.accountService.findOne(req.user.id);
+
+    const roles = await Promise.all(
+      account.userRoles.map((ur) => this.rolesService.findOne(ur.role.id)),
+    );
+
+    return {
+      id: account.id,
+      first_name: account.first_name,
+      last_name: account.last_name,
+      email: account.email,
+      tax_code: account.tax_code,
+      family_member: account.family_member,
+      date_of_birth: account.date_of_birth,
+      roles,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.ADMIN)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne(Number(id));
+  async findOneGeneral(@Param('id') id: string) {
+    const accountId = Number(id);
+    if (isNaN(accountId)) {
+      throw new BadRequestException('Inserire un id numerico valido');
+    }
+    return await this.accountService.findOne(accountId);
   }
 
   @Get(':id/roleOfAccount')
