@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Res, Get, Query } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.dto';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
@@ -14,7 +14,6 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() dto: RegisterDto) {
-    // NOTE: no user data is returned, only a success message
     await this.authService.register(dto);
     return { message: 'Registration successful.' };
   }
@@ -24,15 +23,15 @@ export class AuthController {
     @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    // restituiamo il token sia via header che via cookie HttpOnly per il frontend
     const { access_token } = await this.authService.login(dto);
     res.setHeader('Authorization', `Bearer ${access_token}`);
     res.cookie('Token', access_token, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       path: '/',
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      domain: process.env.COOKIE_DOMAIN,
     });
     return { message: 'Login successful.' };
   }

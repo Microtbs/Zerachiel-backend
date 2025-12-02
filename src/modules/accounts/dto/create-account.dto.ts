@@ -5,12 +5,10 @@ import {
   IsBoolean,
   IsOptional,
   Length,
+  MinLength,
+  Matches,
 } from 'class-validator';
 
-/**
- * Payload standard per registrare un nuovo account.
- * Utilizzato sia dall'AuthController sia dagli amministratori.
- */
 export class CreateAccountDto {
   @IsNotEmpty()
   @IsString()
@@ -32,8 +30,16 @@ export class CreateAccountDto {
   @Length(16, 16)
   tax_code?: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Password is required' })
   @IsString()
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @Matches(/[A-Z]/, {
+    message: 'Password must contain at least one uppercase letter',
+  })
+  @Matches(/[a-z]/, {
+    message: 'Password must contain at least one lowercase letter',
+  })
+  @Matches(/\d/, { message: 'Password must contain at least one number' })
   hashed_password: string;
 
   @IsOptional()

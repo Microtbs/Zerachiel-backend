@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsInt } from 'class-validator';
+import { IsNotEmpty, IsInt, IsDate } from 'class-validator';
 import { FlowerType } from '../../../common/enums/flower.enums';
 
 /**
@@ -9,9 +9,9 @@ export class CreateDigitalFlowersDto {
   //@Length(2, 30) // deve avere minimo 2 caratteri, massimo 30
   type: FlowerType;
 
-  @IsInt() // deve essere un numero intero
+  @IsDate()
   //@Min(1) // almeno 1 ( non si possono inviare 0 fiori)
-  duration: number;
+  duration: Date;
 
   @IsInt() // ID deve essere un numero intero
   //@Min(1) // l'ID dell'utente deve esistere (>0)

@@ -2,11 +2,8 @@ import { Message } from '../../messages/entities/message.entity';
 import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from 'typeorm';
 import { DigitalFlower } from '../../digital_flowers/entities/digital_flower.entity';
 import { UserRole } from '../../roles/entities/user_role.entity';
+import { Exclude } from 'class-transformer';
 
-/**
- * Modello persistente per gli utenti registrati.
- * Include relazioni bidirezionali con messaggi, fiori digitali e ruoli assegnati.
- */
 @Entity('accounts')
 export class Account {
   @PrimaryGeneratedColumn()
@@ -25,6 +22,7 @@ export class Account {
   tax_code: string;
 
   @Column()
+  @Exclude()
   hashed_password: string;
 
   @Column()
@@ -35,10 +33,6 @@ export class Account {
 
   @Column({ type: 'date' })
   date_of_birth: Date;
-
-  /* @Column({ name: 'updated_at', type: 'timestamp' })
-     updated_at: Date;
-     */
 
   @OneToMany(() => Message, (message) => message.sender)
   sentMessages: Message[];
@@ -51,9 +45,6 @@ export class Account {
 
   @OneToMany(() => DigitalFlower, (flower) => flower.sender)
   digitalFlower: DigitalFlower[];
-
-  /* @OneToMany(() => RoleShift, shift => shift.role)
-     roleShifts: RoleShift[];*/
 
   @OneToMany(() => UserRole, (userRole) => userRole.account)
   userRoles: UserRole[];

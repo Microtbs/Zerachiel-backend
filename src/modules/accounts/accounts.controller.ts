@@ -12,18 +12,14 @@ import {
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
-import { RoleType } from 'src/common/enums/role.enums';
+import { RoleType } from '../../common/enums/role.enums';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { OwnershipGuard } from '../auth/guards/ownership.guard';
 import { UpdateAccountDto, UpdateSensitiveDto } from './dto/update-account.dto';
-import { JwtRequest } from 'src/modules/auth/interfaces/jwt-request.interface';
+import { JwtRequest } from '../../modules/auth/interfaces/jwt-request.interface';
 import { RolesService } from '../roles/roles.service';
-
-/**
- * Espone gli endpoint REST relativi agli account utente.
- * Gestisce registrazione, profili e gestione credenziali con i relativi guard.
- */
 
 @Controller('accounts')
 export class AccountsController {
@@ -32,6 +28,8 @@ export class AccountsController {
     private readonly rolesService: RolesService,
   ) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.ADMIN)
   @Post()
   create(@Body() createAccountDto: CreateAccountDto) {
     return this.accountService.create(createAccountDto);
@@ -76,6 +74,7 @@ export class AccountsController {
     return await this.accountService.findOne(accountId);
   }
 
+  @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Get(':id/roleOfAccount')
   getRoleOfAccount(@Param('id') id: string) {
     return this.accountService.getRoleOfAccount(Number(id));
@@ -126,17 +125,14 @@ export class AccountsController {
     const userId = req.user.id;
     return this.accountService.editEmail(userId, dto);
   }
-  /**
-   * Endpoint per aggiornare il profilo dell'utente specificato,
-   * modificando i campi first_name, last_name, tax_code, family_member e date_of_birth.
-   */
+  @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Patch('profile/:id')
   updateProfile(@Param('id') id: string, @Body() body: UpdateAccountDto) {
     return this.accountService.update(Number(id), body);
   }
-  /**
-   * Endpoint per rimuovere un account specifico.
-   */
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.accountService.remove(Number(id));

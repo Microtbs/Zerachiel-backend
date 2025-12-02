@@ -13,9 +13,9 @@ import { MunicipalitiesService } from './municipalities.service';
 import { CreateMunicipalityDto } from './dto/create-municipality.dto';
 import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
-import { RoleType } from 'src/common/enums/role.enums';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { RoleType } from '../../common/enums/role.enums';
 
 /**
  * Espone API per consultare e amministrare i comuni censiti nel sistema.

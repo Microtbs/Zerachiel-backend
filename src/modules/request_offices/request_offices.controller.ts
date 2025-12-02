@@ -11,14 +11,11 @@ import {
 import { RequestOfficesService } from './request_offices.service';
 import { CreateRequestOfficeDto } from './dto/create-request_office.dto';
 import { UpdateRequestOfficeDto } from './dto/update-request_office.dto';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RoleType } from 'src/common/enums/role.enums';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RoleType } from '../../common/enums/role.enums';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-/**
- * Controller che espone CRUD sugli uffici addetti alle richieste dei cittadini.
- */
 @Controller('request_offices')
 export class RequestOfficesController {
   constructor(private readonly requestOfficesService: RequestOfficesService) {}

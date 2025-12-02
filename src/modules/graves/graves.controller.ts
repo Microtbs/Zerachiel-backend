@@ -12,10 +12,10 @@ import {
 import { GravesService } from './graves.service';
 import { CreateGravesDto } from './dto/create-graves.dto';
 import { UpdateGravesDto } from './dto/update-graves.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RoleType } from 'src/common/enums/role.enums';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
+import { RoleType } from '../../common/enums/role.enums';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 /**
  * Controller REST per la gestione delle tombe nel cimitero digitale.

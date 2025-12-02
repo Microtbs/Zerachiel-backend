@@ -13,9 +13,9 @@ import { MunicipalityContactsService } from './municipality_contacts.service';
 import { CreateMunicipalityContactDto } from './dto/create-municipality_contact.dto';
 import { UpdateMunicipalityContactDto } from './dto/update-municipality_contact.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
-import { RoleType } from 'src/common/enums/role.enums';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { RoleType } from '../../common/enums/role.enums';
 
 /**
  * API per creare e consultare i contatti istituzionali legati ai comuni.

@@ -5,9 +5,6 @@ import { AccountsController } from './accounts.controller';
 import { Account } from './entities/account.entity';
 import { RolesModule } from '../roles/roles.module';
 
-/**
- * Modulo responsabile degli utenti registrati e riutilizzabile da altri servizi.
- */
 @Module({
   imports: [TypeOrmModule.forFeature([Account]), forwardRef(() => RolesModule)],
   controllers: [AccountsController],

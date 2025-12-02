@@ -11,10 +11,10 @@ import {
 import { DeceasedService } from './deceased.service';
 import { CreateDeceasedDto } from './dto/create-deceased.dto';
 import { UpdateDeceasedDto } from './dto/update-deceased.dto';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RoleType } from 'src/common/enums/role.enums';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RoleType } from '../../common/enums/role.enums';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 /**
  * API per gestire i dati anagrafici dei defunti e collegarli alle tombe.

@@ -13,14 +13,10 @@ import { DigitalFlowersService } from './digital_flowers.service';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RoleType } from 'src/common/enums/role.enums';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RoleType } from '../../common/enums/role.enums';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
-/**
- * Controller HTTP per i fiori digitali.
- * Gli endpoint sono protetti da ruoli per distinguere utenti comuni e admin.
- */
 @Controller('digital_flowers')
 export class DigitalFlowersController {
   constructor(private readonly service: DigitalFlowersService) {}

@@ -15,8 +15,6 @@ export class CreateMessageDto {
   @IsString()
   @IsNotEmpty()
   description: string;
-  @IsInt()
-  created_at: number;
 
   @IsNotEmpty()
   type: msgType;

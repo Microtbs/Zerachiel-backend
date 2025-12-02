@@ -7,7 +7,10 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
+  UseInterceptors,
 } from '@nestjs/common';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -16,22 +19,29 @@ import {
   msgType,
   message_type,
 } from '../../common/enums/message.enums';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleType } from 'src/common/enums/role.enums';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { JwtRequest } from '../../modules/auth/interfaces/jwt-request.interface';
 
 /**
  * REST controller per creare, cercare e aggiornare i messaggi/mandati.
  */
 @Controller('messages')
+@UseInterceptors(ClassSerializerInterceptor)
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.USER)
   @Post()
-  create(@Body() createMessageDto: CreateMessageDto) {
-    return this.messagesService.create(createMessageDto);
+  create(@Body() createMessageDto: CreateMessageDto, @Req() req: JwtRequest) {
+    return this.messagesService.create(createMessageDto, req.user.id);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  findByCurrentUser(@Req() req: JwtRequest) {
+    return this.messagesService.findByUser(req.user.id);
   }
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)

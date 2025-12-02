@@ -6,9 +6,6 @@ import { Deceased } from './entities/deceased.entity';
 import { CreateDeceasedDto } from './dto/create-deceased.dto';
 import { UpdateDeceasedDto } from './dto/update-deceased.dto';
 
-/**
- * CRUD service per i defunti indicizzati nel sistema.
- */
 @Injectable()
 export class DeceasedService {
   constructor(
