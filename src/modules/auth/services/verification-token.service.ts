@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan } from 'typeorm';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   VerificationToken,
   TokenType,
@@ -100,6 +101,7 @@ export class VerificationTokenService {
     await this.tokenRepository.delete({ token, type });
   }
 
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async cleanupExpired(): Promise<void> {
     await this.tokenRepository.delete({
       expiresAt: LessThan(new Date()),

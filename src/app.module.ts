@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ormConfig } from './configs/ormconfig';
 
 import { MunicipalityContactsModule } from './modules/municipality_contacts/municipality_contacts.module';
@@ -15,17 +16,13 @@ import { AccountsModule } from './modules/accounts/accounts.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { MailModule } from './modules/mail/mail.module';
 
-/**
- * Root module che compone tutti i moduli funzionali dell'applicazione.
- * Qui rendiamo le variabili d'ambiente globali e inizializziamo TypeORM
- * con la configurazione condivisa.
- */
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ormConfig,
     }),
+    ScheduleModule.forRoot(),
     AccountsModule,
     GravesModule,
     MunicipalityContactsModule,
