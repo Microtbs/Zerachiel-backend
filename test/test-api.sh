@@ -43,7 +43,7 @@ register_user() {
             \"first_name\": \"Mario\",
             \"last_name\": \"Rossi\",
             \"email\": \"$RANDOM_EMAIL\",
-            \"tax_code\": \"RSSMRA80A01H501U\",
+            \"tax_code\": \"RSSMRA80A01H501M\",
             \"hashed_password\": \"Test1234!\",
             \"family_member\": false
         }")
@@ -212,7 +212,7 @@ reset_password() {
   RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/auth/resetPassword" \
     -H "Content-Type: application/json" \
     -d "{
-            \"token\": \"$OTP\",
+            \"token\": $OTP,
             \"newPassword\": \"$NEW_PASS\"
         }")
 

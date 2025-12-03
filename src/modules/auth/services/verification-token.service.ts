@@ -101,7 +101,7 @@ export class VerificationTokenService {
     await this.tokenRepository.delete({ token, type });
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_6_HOURS)
   async cleanupExpired(): Promise<void> {
     await this.tokenRepository.delete({
       expiresAt: LessThan(new Date()),

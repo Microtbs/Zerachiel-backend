@@ -2,12 +2,11 @@ import { Controller, Post, Body, Res, Get, Query } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.dto';
 import { LoginDto } from './dto/login.dto';
+import { RecoverPasswordDTO } from './dto/recover-password.dto';
+import { ResetPasswordDTO } from './dto/reset-password.dto';
 import { Response } from 'express';
+import { JWT_COOKIE_MAX_AGE_MS } from '../../common/constants/auth.constants';
 
-/**
- * Controller degli endpoint pubblici di autenticazione.
- * Incapsula la logica di restituzione dei messaggi e la gestione del cookie JWT.
- */
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -30,7 +29,7 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      maxAge: JWT_COOKIE_MAX_AGE_MS,
       domain: process.env.COOKIE_DOMAIN,
     });
     return { message: 'Login successful.' };
@@ -42,15 +41,12 @@ export class AuthController {
   }
 
   @Post('recoverPassword')
-  recoverPassword(@Body('email') email: string) {
-    return this.authService.requestPasswordReset(email);
+  recoverPassword(@Body() dto: RecoverPasswordDTO) {
+    return this.authService.requestPasswordReset(dto.email);
   }
 
   @Post('resetPassword')
-  resetPassword(
-    @Body('token') token: number,
-    @Body('newPassword') newPassword: string,
-  ) {
-    return this.authService.resetPassword(token, newPassword);
+  resetPassword(@Body() dto: ResetPasswordDTO) {
+    return this.authService.resetPassword(dto.token, dto.newPassword);
   }
 }

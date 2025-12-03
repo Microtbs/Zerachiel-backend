@@ -10,6 +10,10 @@ import { CreateAccountDto as RegisterDto } from '../../accounts/dto/create-accou
 import { LoginDto } from '../dto/login.dto';
 import { RoleType } from '../../../common/enums/role.enums';
 import { ROLE_PRIORITY } from '../../../common/constants/role-priority.constants';
+import {
+  BCRYPT_ROUNDS,
+  DEFAULT_USER_ROLE_ID,
+} from '../../../common/constants/auth.constants';
 import { MailService } from '../../mail/mail.service';
 import { RolesService } from '../../roles/roles.service';
 import { VerificationTokenService } from '../services/verification-token.service';
@@ -70,7 +74,7 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(
       tokenData.accountData.hashed_password,
-      10,
+      BCRYPT_ROUNDS,
     );
 
     const user = await this.accountsService.create({
@@ -82,7 +86,7 @@ export class AuthService {
       family_member: tokenData.accountData.family_member,
     });
 
-    await this.rolesService.createRoleofAccount(user.id, 1);
+    await this.rolesService.createRoleofAccount(user.id, DEFAULT_USER_ROLE_ID);
     await this.verificationTokenService.deleteToken(
       token,
       TokenType.EMAIL_VERIFICATION,
@@ -93,6 +97,10 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.accountsService.findByEmail(dto.email);
+
+    const isValid = await bcrypt.compare(dto.password, user.hashed_password);
+    if (!isValid) throw new UnauthorizedException('Credenziali errate');
+
     const roleData = await this.accountsService.getRoleOfAccount(user.id);
 
     const roles: RoleType[] =
@@ -105,9 +113,6 @@ export class AuthService {
     const selectedRole = roles.reduce((prev, curr) => {
       return ROLE_PRIORITY[curr] > ROLE_PRIORITY[prev] ? curr : prev;
     }, roles[0]);
-
-    const isValid = await bcrypt.compare(dto.password, user.hashed_password);
-    if (!isValid) throw new UnauthorizedException('Credenziali errate');
 
     const payload = {
       sub: user.id,
