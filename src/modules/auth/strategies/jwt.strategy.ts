@@ -3,11 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtConfig } from '../../../configs/jwtconfig';
 import { AuthService } from '../services/auth.service';
-
-/**
- * Strategy Passport che valida il token JWT inviato via header Authorization.
- * Il payload viene ridotto alle proprietà utili e iniettato nella Request Nest.
- */
+import { RoleType } from '../../../common/enums/role.enums';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: { sub: number; roles: string }) {
+  validate(payload: { sub: number; roles: RoleType }) {
     return { id: payload.sub, roles: payload.roles };
   }
 }
