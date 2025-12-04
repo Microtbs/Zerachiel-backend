@@ -72,17 +72,12 @@ export class AuthService {
       throw new BadRequestException('Hai già verificato la tua email');
     }
 
-    const hashedPassword = await bcrypt.hash(
-      tokenData.accountData.hashed_password,
-      BCRYPT_ROUNDS,
-    );
-
     const user = await this.accountsService.create({
       first_name: tokenData.accountData.first_name,
       last_name: tokenData.accountData.last_name,
       email: tokenData.accountData.email,
       tax_code: tokenData.accountData.tax_code,
-      hashed_password: hashedPassword,
+      hashed_password: tokenData.accountData.hashed_password,
       family_member: tokenData.accountData.family_member,
     });
 

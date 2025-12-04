@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import * as bcrypt from 'bcrypt';
 import {
   VerificationToken,
   TokenType,
@@ -12,6 +13,7 @@ import {
   OTP_LENGTH,
   OTP_EXPIRY_MINUTES,
   OTP_COOLDOWN_MINUTES,
+  BCRYPT_ROUNDS,
 } from '../../../common/constants/auth.constants';
 
 @Injectable()
@@ -44,11 +46,20 @@ export class VerificationTokenService {
 
     await this.tokenRepository.delete({ email, type });
 
+    // Hash password before storing in verification token for security
+    let processedAccountData = accountData || null;
+    if (processedAccountData && processedAccountData.hashed_password) {
+      processedAccountData.hashed_password = await bcrypt.hash(
+        processedAccountData.hashed_password,
+        BCRYPT_ROUNDS,
+      );
+    }
+
     const verificationToken = this.tokenRepository.create({
       token,
       email,
       type,
-      accountData: accountData || null,
+      accountData: processedAccountData,
       expiresAt,
       cooldownExpiresAt,
     });

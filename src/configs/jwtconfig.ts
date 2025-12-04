@@ -12,7 +12,7 @@ function validateJwtSecret(): string {
   return secret;
 }
 
-export const jwtConfig: { secret: string; expiresIn: string } = {
+export const jwtConfig: { secret: string; expiresIn: number } = {
   secret: validateJwtSecret(),
-  expiresIn: process.env.JWT_EXPIRES ?? '3600s',
+  expiresIn: parseInt(process.env.JWT_EXPIRES ?? '3600'),
 };

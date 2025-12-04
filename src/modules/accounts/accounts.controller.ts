@@ -8,8 +8,8 @@ import {
   UseGuards,
   Patch,
   Req,
-  BadRequestException,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -60,18 +60,14 @@ export class AccountsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.ADMIN)
   @Get(':id')
-  async findOneGeneral(@Param('id') id: string) {
-    const accountId = Number(id);
-    if (isNaN(accountId)) {
-      throw new BadRequestException('Inserire un id numerico valido');
-    }
-    return await this.accountService.findOne(accountId);
+  async findOneGeneral(@Param('id', ParseIntPipe) id: number) {
+    return await this.accountService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Get(':id/roleOfAccount')
-  getRoleOfAccount(@Param('id') id: string) {
-    return this.accountService.getRoleOfAccount(Number(id));
+  getRoleOfAccount(@Param('id', ParseIntPipe) id: number) {
+    return this.accountService.getRoleOfAccount(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -90,14 +86,17 @@ export class AccountsController {
 
   @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Patch('profile/:id')
-  updateProfile(@Param('id') id: string, @Body() body: UpdateAccountDto) {
-    return this.accountService.update(Number(id), body);
+  updateProfile(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateAccountDto,
+  ) {
+    return this.accountService.update(id, body);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountService.remove(Number(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.accountService.remove(id);
   }
 }
