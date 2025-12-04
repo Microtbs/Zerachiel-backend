@@ -14,7 +14,9 @@ import { AccountResponseDTO } from './dto/account-response.dto';
 import { AccountMapper } from './mappers/account.mapper';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
-import { RolesService } from '../roles/roles.service';
+import { RolesService } from '@@/roles/roles.service';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
 @Injectable()
 export class AccountsService {
@@ -28,11 +30,29 @@ export class AccountsService {
     return this.repo.save(user);
   }
 
-  async findAll(): Promise<AccountResponseDTO[]> {
-    const accounts = await this.repo.find({
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<AccountResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [accounts, total] = await this.repo.findAndCount({
       relations: ['userRoles', 'userRoles.role'],
+      skip,
+      take: limit,
     });
-    return AccountMapper.toResponseList(accounts);
+
+    const data = AccountMapper.toResponseList(accounts);
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findByEmail(email: string): Promise<Account> {
@@ -141,7 +161,7 @@ export class AccountsService {
 
     return AccountMapper.toResponse(accountWithRelations);
   }
-  // prima rimuovi ruolo da removeRoleOfAccount si role.service e poi rimuovi account
+
   async remove(id: number): Promise<{ message: string }> {
     const user = await this.repo.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');

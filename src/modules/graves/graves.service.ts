@@ -4,10 +4,9 @@ import { DeleteResult, Repository } from 'typeorm';
 import { Grave } from './entities/grave.entity';
 import { CreateGravesDto } from './dto/create-graves.dto';
 import { UpdateGravesDto } from './dto/update-graves.dto';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
-/**
- * Gestisce i record delle tombe e mantiene la coerenza con gli uffici richieste.
- */
 @Injectable()
 export class GravesService {
   constructor(
@@ -19,8 +18,26 @@ export class GravesService {
     return this.repo.save(Grave);
   }
 
-  findAll(): Promise<Grave[]> {
-    return this.repo.find();
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<Grave>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.repo.findAndCount({
+      skip,
+      take: limit,
+    });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number): Promise<Grave> {

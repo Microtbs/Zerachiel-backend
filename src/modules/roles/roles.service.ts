@@ -11,9 +11,6 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UserRole } from './entities/user_role.entity';
 import { AccountsService } from '../accounts/accounts.service';
 
-/**
- * Orchestratore per ruoli e assegnazioni account/ruolo.
- */
 @Injectable()
 export class RolesService {
   constructor(

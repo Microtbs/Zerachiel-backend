@@ -9,24 +9,22 @@ import {
   Patch,
   Req,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
-import { RoleType } from '../../common/enums/role.enums';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { OwnershipGuard } from '../auth/guards/ownership.guard';
+import { RoleType } from '@/common/enums/role.enums';
+import { Roles } from '@/common/decorators/role';
+import { JwtAuthGuard } from '@@/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@@/auth/guards/roles.guard';
+import { OwnershipGuard } from '@@/auth/guards/ownership.guard';
 import { UpdateAccountDto, UpdateSensitiveDto } from './dto/update-account.dto';
-import { JwtRequest } from '../../modules/auth/interfaces/jwt-request.interface';
-import { RolesService } from '../roles/roles.service';
+import { JwtRequest } from '@@/auth/interfaces/jwt-request.interface';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 
 @Controller('accounts')
 export class AccountsController {
-  constructor(
-    private readonly accountService: AccountsService,
-    private readonly rolesService: RolesService,
-  ) {}
+  constructor(private readonly accountService: AccountsService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.ADMIN)
@@ -38,18 +36,14 @@ export class AccountsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)
   @Get()
-  findAll() {
-    return this.accountService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.accountService.findAll(paginationDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
   async findOne(@Req() req: JwtRequest) {
     const account = await this.accountService.findOne(req.user.id);
-
-    const roles = await Promise.all(
-      account.userRoles.map((ur) => this.rolesService.findOne(ur.role.id)),
-    );
 
     return {
       id: account.id,
@@ -59,7 +53,7 @@ export class AccountsController {
       tax_code: account.tax_code,
       family_member: account.family_member,
       date_of_birth: account.date_of_birth,
-      roles,
+      roles: account.userRoles.map((ur) => ur.role),
     };
   }
 
@@ -80,51 +74,20 @@ export class AccountsController {
     return this.accountService.getRoleOfAccount(Number(id));
   }
 
-  /**
-   * Entry point dinamico per aggiornare campi specifici
-   * (es. editPassword, editEmail) basandosi sul parametro di rotta.
-   */
-  /* @Patch('edit/:parameter')
-  editAccount(
-    @Param('parameter') parameter: string,
-    @Body() body: { id: number } & Record<string, unknown>,
-  ) {
-    const methodName = `edit${parameter.charAt(0).toUpperCase()}${parameter.slice(1)}`;
-
-    const method = this.accountService[methodName] as
-      | ((
-          id: number,
-          dto: Record<string, unknown>,
-        ) => Promise<{ message: string; account?: unknown }>)
-      | undefined;
-
-    if (!method) {
-      return { message: `Method ${methodName} not found` };
-    }
-
-    return method.call(this.accountService, body.id, body) as Promise<{
-      message: string;
-      account?: unknown;
-    }>;
-  }*/
-  /**
-   * Endpoint per aggiornare la password dell'utente autenticato.
-   */
-  @Patch('password')
   @UseGuards(JwtAuthGuard)
+  @Patch('password')
   editPassword(@Req() req: JwtRequest, @Body() dto: UpdateSensitiveDto) {
     const userId = req.user.id;
     return this.accountService.editPassword(userId, dto);
   }
-  /**
-   *  Endpoint per aggiornare l'email dell'utente autenticato.
-   */
-  @Patch('email')
+
   @UseGuards(JwtAuthGuard)
+  @Patch('email')
   editEmail(@Req() req: JwtRequest, @Body() dto: UpdateSensitiveDto) {
     const userId = req.user.id;
     return this.accountService.editEmail(userId, dto);
   }
+
   @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Patch('profile/:id')
   updateProfile(@Param('id') id: string, @Body() body: UpdateAccountDto) {

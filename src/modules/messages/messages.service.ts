@@ -11,11 +11,9 @@ import {
   msgType,
   message_type,
 } from '../../common/enums/message.enums';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
-/**
- * Incapsula la logica di gestione delle richieste di servizio e feedback.
- * Tutte le risposte vengono trasformate in DTO per isolare l'entity.
- */
 @Injectable()
 export class MessagesService {
   constructor(
@@ -53,18 +51,31 @@ export class MessagesService {
     return messageWithRelations;
   }
 
-  /*findAll(): Promise<Message[]> {
-    return this.repo.find();
-  }*/
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
 
-  async findAll(): Promise<MessageResponseDTO[]> {
-    const messages = await this.repo.find({
+    const [messages, total] = await this.repo.findAndCount({
       relations: ['sender', 'receiver', 'requestOffice'],
+      skip,
+      take: limit,
     });
 
-    return plainToInstance(MessageResponseDTO, messages, {
+    const data = plainToInstance(MessageResponseDTO, messages, {
       excludeExtraneousValues: true,
     });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(
@@ -81,43 +92,103 @@ export class MessagesService {
     });
   }
 
-  async findMsgType(message_type: message_type): Promise<MessageResponseDTO[]> {
-    const message = await this.repo.find({
+  async findMsgType(
+    message_type: message_type,
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [messages, total] = await this.repo.findAndCount({
       where: { message_type },
       relations: ['sender', 'receiver', 'requestOffice'],
+      skip,
+      take: limit,
     });
-    if (!message || message.length == 0) {
+
+    if (messages.length === 0) {
       throw new NotFoundException(`message ${message_type} not found`);
     }
-    return plainToInstance(MessageResponseDTO, message, {
+
+    const data = plainToInstance(MessageResponseDTO, messages, {
       excludeExtraneousValues: true,
     });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
-  async findByType(type: msgType): Promise<MessageResponseDTO[]> {
-    const messages = await this.repo.find({
+  async findByType(
+    type: msgType,
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [messages, total] = await this.repo.findAndCount({
       where: { type },
       relations: ['sender', 'receiver', 'requestOffice'],
+      skip,
+      take: limit,
     });
-    if (!messages || messages.length === 0) {
+
+    if (messages.length === 0) {
       throw new NotFoundException(`message ${type} not found`);
     }
-    return plainToInstance(MessageResponseDTO, messages, {
+
+    const data = plainToInstance(MessageResponseDTO, messages, {
       excludeExtraneousValues: true,
     });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
-  async findByStatus(status: msgStatus): Promise<MessageResponseDTO[]> {
-    const messages = await this.repo.find({
+  async findByStatus(
+    status: msgStatus,
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [messages, total] = await this.repo.findAndCount({
       where: { status },
       relations: ['sender', 'receiver', 'requestOffice'],
+      skip,
+      take: limit,
     });
-    if (!messages || messages.length === 0) {
+
+    if (messages.length === 0) {
       throw new NotFoundException(`message ${status} not found`);
     }
-    return plainToInstance(MessageResponseDTO, messages, {
+
+    const data = plainToInstance(MessageResponseDTO, messages, {
       excludeExtraneousValues: true,
     });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async update(
@@ -135,11 +206,32 @@ export class MessagesService {
     return this.repo.delete(id);
   }
 
-  async findByUser(userId: number): Promise<Message[]> {
-    const messages = await this.repo.find({
+  async findByUser(
+    userId: number,
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [messages, total] = await this.repo.findAndCount({
       where: [{ sender: { id: userId } }, { receiver: { id: userId } }],
       relations: ['sender', 'receiver', 'requestOffice'],
+      skip,
+      take: limit,
     });
-    return messages;
+
+    const data = plainToInstance(MessageResponseDTO, messages, {
+      excludeExtraneousValues: true,
+    });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 }

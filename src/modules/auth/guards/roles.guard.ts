@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { RoleType } from '../../../common/enums/role.enums';
 import { ROLE_PRIORITY } from '../../../common/constants/role-priority.constants';
-import { ROLES_KEY } from '../decorators/roles.decorator';
+import { ROLES_KEY } from '@/common/decorators/role';
 import { JwtRequest } from '../interfaces/jwt-request.interface';
 
 @Injectable()

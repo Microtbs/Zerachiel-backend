@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Deceased } from './entities/deceased.entity';
-
 import { CreateDeceasedDto } from './dto/create-deceased.dto';
 import { UpdateDeceasedDto } from './dto/update-deceased.dto';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
 @Injectable()
 export class DeceasedService {
@@ -17,8 +18,26 @@ export class DeceasedService {
     return this.repo.save(deceased);
   }
 
-  findAll(): Promise<Deceased[]> {
-    return this.repo.find();
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<Deceased>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.repo.findAndCount({
+      skip,
+      take: limit,
+    });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number): Promise<Deceased> {

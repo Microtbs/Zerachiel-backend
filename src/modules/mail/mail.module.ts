@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailService } from './mail.service';
-import { MailConfig } from '../../configs/mailconfig';
+import { MailConfig } from '@/configs/mailconfig';
 
 /**
  * Modulo dedicato alle notifiche e-mail.

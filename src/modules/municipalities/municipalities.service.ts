@@ -4,10 +4,9 @@ import { Repository } from 'typeorm';
 import { Municipality } from './entities/municipality.entity';
 import { CreateMunicipalityDto } from './dto/create-municipality.dto';
 import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
-/**
- * Service che coordina i comuni, i contatti e i relativi uffici richieste.
- */
 @Injectable()
 export class MunicipalitiesService {
   constructor(
@@ -15,10 +14,27 @@ export class MunicipalitiesService {
     private readonly municipalityRepo: Repository<Municipality>,
   ) {}
 
-  async findAll(): Promise<Municipality[]> {
-    return this.municipalityRepo.find({
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<Municipality>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.municipalityRepo.findAndCount({
       relations: ['contact', 'requestOffices'],
+      skip,
+      take: limit,
     });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number): Promise<Municipality> {

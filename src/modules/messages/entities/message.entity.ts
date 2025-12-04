@@ -5,17 +5,10 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Account } from '../../accounts/entities/account.entity';
-import { RequestOffice } from '../../request_offices/entities/request_office.entity';
-import {
-  msgStatus,
-  msgType,
-  message_type,
-} from '../../../common/enums/message.enums';
+import { Account } from '@@/accounts/entities/account.entity';
+import { RequestOffice } from '@@/request_offices/entities/request_office.entity';
+import { msgStatus, msgType, message_type } from '@/common/enums/message.enums';
 
-/**
- * Entity TypeORM che rappresenta sia richieste che feedback gestiti dagli uffici.
- */
 @Entity('messages')
 export class Message {
   @PrimaryGeneratedColumn()
@@ -37,7 +30,6 @@ export class Message {
   status: msgStatus;
 
   @ManyToOne(() => Account, (account) => account.sentMessages, {
-    eager: true,
     nullable: false,
     onDelete: 'CASCADE',
   })
@@ -45,7 +37,6 @@ export class Message {
   sender: Account;
 
   @ManyToOne(() => Account, (account) => account.receivedMessages, {
-    eager: true,
     onDelete: 'CASCADE',
     nullable: true,
   })
@@ -53,7 +44,6 @@ export class Message {
   receiver: Account;
 
   @ManyToOne(() => RequestOffice, {
-    eager: true,
     nullable: false,
     onDelete: 'CASCADE',
   })

@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { AccountForMessageDTO } from '../../accounts/dto/account-response.dto';
+import { AccountForMessageDTO } from '@@/accounts/dto/account-response.dto';
 /**
  * DTO serializzato via class-transformer per restituire messaggi arricchiti.
  */

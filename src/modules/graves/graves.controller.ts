@@ -8,39 +8,42 @@ import {
   Patch,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { GravesService } from './graves.service';
 import { CreateGravesDto } from './dto/create-graves.dto';
 import { UpdateGravesDto } from './dto/update-graves.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { RoleType } from '../../common/enums/role.enums';
-import { RolesGuard } from '../auth/guards/roles.guard';
+import { JwtAuthGuard } from '@@/auth/guards/jwt-auth.guard';
+import { Roles } from '@/common/decorators/role';
+import { RoleType } from '@/common/enums/role.enums';
+import { RolesGuard } from '@@/auth/guards/roles.guard';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 
-/**
- * Controller REST per la gestione delle tombe nel cimitero digitale.
- */
 @Controller('graves')
 export class GravesController {
   constructor(private readonly gravesService: GravesService) {}
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)
   @Post()
   create(@Body() creatGravesDto: CreateGravesDto) {
     return this.gravesService.create(creatGravesDto);
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleType.USER)
+
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(RoleType.USER)
   @Get()
-  findAll() {
-    return this.gravesService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.gravesService.findAll(paginationDto);
   }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.USER)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.gravesService.findOne(+id);
   }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)
   @Patch(':id')
@@ -50,9 +53,10 @@ export class GravesController {
   ) {
     return this.gravesService.update(+id, updateGravesDto);
   }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)
-  @Delete('id')
+  @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: string) {
     return this.gravesService.remove(+id);
   }

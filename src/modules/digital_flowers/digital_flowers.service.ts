@@ -5,11 +5,9 @@ import { DigitalFlower } from './entities/digital_flower.entity';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
 import { DigitalFlowerResponseDTO } from './dto/digital_flower-response.dto';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
-/**
- * Gestisce la logica per la creazione e consultazione dei fiori digitali
- * inviati dagli utenti alle tombe dei propri cari.
- */
 @Injectable()
 export class DigitalFlowersService {
   constructor(
@@ -17,15 +15,19 @@ export class DigitalFlowersService {
     private readonly repo: Repository<DigitalFlower>,
   ) {}
 
-  /**
-   * Restituisce l'elenco dei fiori arricchendo i dati con sender e defunto.
-   */
-  async findAll(): Promise<DigitalFlowerResponseDTO[]> {
-    const digitalFlowers = await this.repo.find({
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<DigitalFlowerResponseDTO>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [digitalFlowers, total] = await this.repo.findAndCount({
       relations: ['sender', 'grave', 'grave.deceased'],
+      skip,
+      take: limit,
     });
 
-    const result: DigitalFlowerResponseDTO[] = digitalFlowers.map((flower) => ({
+    const data: DigitalFlowerResponseDTO[] = digitalFlowers.map((flower) => ({
       id: flower.id,
       type: flower.type,
       created_at: flower.createdAt,
@@ -43,7 +45,15 @@ export class DigitalFlowersService {
       },
     }));
 
-    return result;
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number): Promise<DigitalFlower> {

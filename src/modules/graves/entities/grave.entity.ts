@@ -10,9 +10,6 @@ import { RequestOffice } from '../../request_offices/entities/request_office.ent
 import { Deceased } from '../../deceased/entities/deceased.entity';
 import { DigitalFlower } from '../../digital_flowers/entities/digital_flower.entity';
 
-/**
- * Entità che rappresenta una tomba con coordinate e stato manutentivo.
- */
 @Entity('graves')
 export class Grave {
   @PrimaryGeneratedColumn()
@@ -34,11 +31,10 @@ export class Grave {
   section: string;
 
   @ManyToOne(() => RequestOffice, {
-    eager: true, // Carica gli uffici richieste associati quando si carica la tomba associati
-    nullable: true, // L'ufficio richieste può essere nulla
-    onDelete: 'CASCADE', // Se l'ufficio richieste viene eliminato, le tombe associate vengono eliminate
+    nullable: true,
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'id_request_office' }) // nome della colonna di join nella tabella 'graves'
+  @JoinColumn({ name: 'id_request_office' })
   requestoffice: RequestOffice;
 
   @OneToMany(() => Deceased, (deceased) => deceased.grave)

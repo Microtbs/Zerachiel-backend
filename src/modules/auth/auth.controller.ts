@@ -5,7 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { RecoverPasswordDTO } from './dto/recover-password.dto';
 import { ResetPasswordDTO } from './dto/reset-password.dto';
 import { Response } from 'express';
-import { JWT_COOKIE_MAX_AGE_MS } from '../../common/constants/auth.constants';
+import { JWT_COOKIE_MAX_AGE_MS } from '@/common/constants/auth.constants';
 
 @Controller('auth')
 export class AuthController {

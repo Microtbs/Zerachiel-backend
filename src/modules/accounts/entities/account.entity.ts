@@ -1,7 +1,7 @@
-import { Message } from '../../messages/entities/message.entity';
 import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from 'typeorm';
-import { DigitalFlower } from '../../digital_flowers/entities/digital_flower.entity';
-import { UserRole } from '../../roles/entities/user_role.entity';
+import { Message } from '@@/messages/entities/message.entity';
+import { DigitalFlower } from '@@/digital_flowers/entities/digital_flower.entity';
+import { UserRole } from '@@/roles/entities/user_role.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity('accounts')

@@ -5,10 +5,9 @@ import { RequestOffice } from './entities/request_office.entity';
 import { CreateRequestOfficeDto } from './dto/create-request_office.dto';
 import { UpdateRequestOfficeDto } from './dto/update-request_office.dto';
 import { Municipality } from '../municipalities/entities/municipality.entity';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
+import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
-/**
- * Gestisce gli uffici comunali responsabili delle richieste sul cimitero.
- */
 @Injectable()
 export class RequestOfficesService {
   constructor(
@@ -33,8 +32,27 @@ export class RequestOfficesService {
     return this.requestOfficeRepo.save(office);
   }
 
-  findAll(): Promise<RequestOffice[]> {
-    return this.requestOfficeRepo.find({ relations: ['municipality'] });
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<RequestOffice>> {
+    const { page = 1, limit = 20 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.requestOfficeRepo.findAndCount({
+      relations: ['municipality'],
+      skip,
+      take: limit,
+    });
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number): Promise<RequestOffice> {

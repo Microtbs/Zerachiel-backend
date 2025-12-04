@@ -1,4 +1,4 @@
-import { RoleDTO } from '../../roles/dto/role-response.dto';
+import { RoleDTO } from '@@/roles/dto/role-response.dto';
 
 export class AccountForMessageDTO {
   id: number;

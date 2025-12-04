@@ -8,26 +8,26 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { MunicipalitiesService } from './municipalities.service';
 import { CreateMunicipalityDto } from './dto/create-municipality.dto';
 import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { RoleType } from '../../common/enums/role.enums';
+import { Roles } from '@/common/decorators/role';
+import { JwtAuthGuard } from '@@/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@@/auth/guards/roles.guard';
+import { RoleType } from '@/common/enums/role.enums';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 
-/**
- * Espone API per consultare e amministrare i comuni censiti nel sistema.
- */
 @Controller('municipalities')
 export class MunicipalitiesController {
   constructor(private readonly service: MunicipalitiesService) {}
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.USER)
   @Get()
-  findAll() {
-    return this.service.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.service.findAll(paginationDto);
   }
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)

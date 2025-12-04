@@ -8,23 +8,23 @@ import {
   Patch,
   Post,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { MunicipalityContactsService } from './municipality_contacts.service';
 import { CreateMunicipalityContactDto } from './dto/create-municipality_contact.dto';
 import { UpdateMunicipalityContactDto } from './dto/update-municipality_contact.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { Roles } from '@/common/decorators/role';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { RoleType } from '../../common/enums/role.enums';
+import { RoleType } from '@/common/enums/role.enums';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 
-/**
- * API per creare e consultare i contatti istituzionali legati ai comuni.
- */
 @Controller('municipality_contacts')
 export class MunicipalityContactsController {
   constructor(
     private readonly municipality_contactServices: MunicipalityContactsService,
   ) {}
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.ADMIN)
   @Post()
@@ -33,11 +33,12 @@ export class MunicipalityContactsController {
       createMunicipalityContactDto,
     );
   }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.OFFICER)
   @Get()
-  findAll() {
-    return this.municipality_contactServices.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.municipality_contactServices.findAll(paginationDto);
   }
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.USER)

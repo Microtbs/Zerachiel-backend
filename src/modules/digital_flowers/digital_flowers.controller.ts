@@ -8,36 +8,44 @@ import {
   Body,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { DigitalFlowersService } from './digital_flowers.service';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { Roles } from '@/common/decorators/role';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleType } from '../../common/enums/role.enums';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 
 @Controller('digital_flowers')
 export class DigitalFlowersController {
   constructor(private readonly service: DigitalFlowersService) {}
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.USER)
   @Post()
   create(@Body() dto: CreateDigitalFlowersDto) {
     return this.service.create(dto);
   }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.USER)
   @Get()
-  findAll() {
-    return this.service.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.service.findAll(paginationDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.USER)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.service.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.USER)
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,

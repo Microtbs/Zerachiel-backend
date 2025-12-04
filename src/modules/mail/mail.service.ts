@@ -2,40 +2,62 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
-/**
- * Wrapper del MailerModule pensato per inviare le comunicazioni applicative.
- * Centralizza i template HTML e la composizione dinamica dei link.
- */
 @Injectable()
 export class MailService {
-  transporter: any;
+  private readonly fromAddress: string;
+
   constructor(
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
-  ) {}
-
-  async sendVerificationEmail(email: string, token: number) {
-    const appUrl = this.configService.get<string>('APP_URL') ?? '';
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Conferma la tua registrazione',
-      html: `
-      <img src="https://i.imgur.com/ysCR4Rg.png" width="70"/>
-        <h2>Benvenuto!</h2>
-        <p>Per confermare la tua registrazione inserisci questo codice nel form di registrazione: ${token} oppure clicca questo <a href="${appUrl}/auth/verify?token=${token}">Link</a></p>
-      `,
-    });
+  ) {
+    this.fromAddress =
+      this.configService.get<string>('MAIL_FROM') ??
+      `no-reply@${this.configService.get<string>('APP_HOST') ?? 'example.com'}`;
   }
 
-  async sendRecoverEmail(email: string, token: number) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Recupera la tua password',
-      html: `
-      <img src="https://i.imgur.com/ysCR4Rg.png" width="70"/>
-        <h2>Recupera la tua password</h2>
-        <p>Per recuperare la tua password inserisci questo codice nel form di recupero: ${token}</p>
-      `,
-    });
+  async sendVerificationEmail(email: string, token: number): Promise<void> {
+    const appUrl = this.configService.get<string>('APP_URL') ?? '';
+    const verifyUrl = `${appUrl.replace(/\/$/, '')}/auth/verify?token=${encodeURIComponent(
+      token,
+    )}`;
+
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        from: this.fromAddress,
+        subject: 'Conferma la tua registrazione',
+        template: './templates/verification',
+        context: {
+          token,
+          verifyUrl,
+        },
+      });
+    } catch (err) {
+      console.error(
+        `Errore inviando mail di verifica a ${email}`,
+        (err as Error).stack,
+      );
+      throw err;
+    }
+  }
+
+  async sendRecoverEmail(email: string, token: number): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        from: this.fromAddress,
+        subject: 'Recupera la tua password',
+        template: './templates/recover',
+        context: {
+          token,
+        },
+      });
+    } catch (err) {
+      console.error(
+        `Errore inviando mail di recover a ${email}`,
+        (err as Error).stack,
+      );
+      throw err;
+    }
   }
 }

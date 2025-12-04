@@ -8,8 +8,8 @@ import * as bcrypt from 'bcrypt';
 import { AccountsService } from '../../accounts/accounts.service';
 import { CreateAccountDto as RegisterDto } from '../../accounts/dto/create-account.dto';
 import { LoginDto } from '../dto/login.dto';
-import { RoleType } from '../../../common/enums/role.enums';
-import { ROLE_PRIORITY } from '../../../common/constants/role-priority.constants';
+import { RoleType } from '@/common/enums/role.enums';
+import { ROLE_PRIORITY } from '@/common/constants/role-priority.constants';
 import {
   BCRYPT_ROUNDS,
   DEFAULT_USER_ROLE_ID,

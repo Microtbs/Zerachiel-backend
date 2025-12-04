@@ -1,9 +1,6 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { RolesService } from './roles.service';
 
-/**
- * Espone endpoint semplici per consultare ruoli e assegnarli agli account.
- */
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
@@ -17,6 +14,7 @@ export class RolesController {
   findOne(@Param('id') id: string) {
     return this.rolesService.findOne(+id);
   }
+
   @Get('AssignRole/:account_id/:role_id')
   async assignRole(
     @Param('account_id') accountId: number,
