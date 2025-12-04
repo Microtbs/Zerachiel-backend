@@ -1,9 +1,8 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,16 +12,14 @@ import { UpdateAccountDto, UpdateSensitiveDto } from './dto/update-account.dto';
 import { AccountResponseDTO } from './dto/account-response.dto';
 import { AccountMapper } from './mappers/account.mapper';
 import * as bcrypt from 'bcrypt';
-import { UnauthorizedException } from '@nestjs/common';
-import { RolesService } from '@@/roles/roles.service';
 import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
+import { BCRYPT_ROUNDS } from '../../common/constants/auth.constants';
 
 @Injectable()
 export class AccountsService {
   constructor(
     @InjectRepository(Account) private readonly repo: Repository<Account>,
-    @Inject(forwardRef(() => RolesService)) private rolesService: RolesService,
   ) {}
 
   create(createAccountDto: CreateAccountDto): Promise<Account> {
@@ -98,7 +95,7 @@ export class AccountsService {
 
     if (!isValid) throw new UnauthorizedException('Invalid current password');
 
-    account.hashed_password = await bcrypt.hash(newPassword, 10);
+    account.hashed_password = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
     const updatedAccount = await this.repo.save(account);
 
     return {
@@ -107,15 +104,11 @@ export class AccountsService {
     };
   }
 
-  /**
-   * Metodo usato esclusivamente dal flusso di recupero password (mail).
-   * Forza l'aggiornamento dell'hash conoscendo solo l'email.
-   */
   async forceEditPassword(email: string, newPassword: string) {
     const account = await this.repo.findOne({ where: { email } });
     if (!account) throw new NotFoundException('Account not found');
 
-    account.hashed_password = await bcrypt.hash(newPassword, 10);
+    account.hashed_password = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
 
     await this.repo.save(account);
 
@@ -165,7 +158,6 @@ export class AccountsService {
   async remove(id: number): Promise<{ message: string }> {
     const user = await this.repo.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
-    await this.rolesService.removeRoleOfAccount(id);
     await this.repo.delete(id);
     return {
       message: 'Account removed successfully',

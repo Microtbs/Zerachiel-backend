@@ -43,7 +43,7 @@ register_user() {
             \"first_name\": \"Mario\",
             \"last_name\": \"Rossi\",
             \"email\": \"$RANDOM_EMAIL\",
-            \"tax_code\": \"RSSMRA80A01H501M\",
+            \"tax_code\": \"RSSMRA80A01H501D\",
             \"hashed_password\": \"Test1234!\",
             \"family_member\": false
         }")
@@ -325,6 +325,300 @@ send_digital_flower() {
   fi
 }
 
+get_all_graves() {
+  print_header "11. GET TUTTE LE TOMBE (PAGINATE)"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima!"
+    return
+  fi
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$BASE_URL/graves?page=1&limit=10" \
+    -H "Authorization: Bearer $TOKEN")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "Tombe recuperate con successo"
+  else
+    print_error "Errore nel recupero tombe (HTTP $HTTP_CODE)"
+  fi
+}
+
+get_grave_by_id() {
+  print_header "12. GET TOMBA PER ID"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima!"
+    return
+  fi
+
+  read -p "Inserisci ID tomba: " GRAVE_ID
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$BASE_URL/graves/$GRAVE_ID" \
+    -H "Authorization: Bearer $TOKEN")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "Tomba recuperata con successo"
+  else
+    print_error "Errore nel recupero tomba (HTTP $HTTP_CODE)"
+  fi
+}
+
+create_grave() {
+  print_header "13. CREA NUOVA TOMBA (OFFICER)"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima! (Richiede permessi OFFICER)"
+    return
+  fi
+
+  read -p "Nome del defunto: " NAME
+  read -p "Cognome: " SURNAME
+  read -p "Data di nascita (YYYY-MM-DD): " DOB
+  read -p "Data di morte (YYYY-MM-DD): " DOD
+  read -p "Numero tomba: " GRAVE_NUMBER
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/graves" \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+            \"name\": \"$NAME\",
+            \"surname\": \"$SURNAME\",
+            \"date_of_birth\": \"${DOB}T00:00:00Z\",
+            \"date_of_death\": \"${DOD}T00:00:00Z\",
+            \"grave_number\": \"$GRAVE_NUMBER\"
+        }")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 201 ]; then
+    print_success "Tomba creata con successo!"
+    echo "$BODY" | jq '.id' > /tmp/grave_id.txt
+  else
+    print_error "Creazione tomba fallita (HTTP $HTTP_CODE)"
+  fi
+}
+
+update_grave() {
+  print_header "14. AGGIORNA TOMBA (OFFICER)"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima! (Richiede permessi OFFICER)"
+    return
+  fi
+
+  read -p "ID tomba da aggiornare: " GRAVE_ID
+  read -p "Nuovo numero tomba (lascia vuoto per non cambiare): " NEW_GRAVE_NUMBER
+
+  if [ -z "$NEW_GRAVE_NUMBER" ]; then
+    print_info "Campo vuoto, nessun aggiornamento"
+    return
+  fi
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH "$BASE_URL/graves/$GRAVE_ID" \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+            \"grave_number\": \"$NEW_GRAVE_NUMBER\"
+        }")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "Tomba aggiornata con successo!"
+  else
+    print_error "Aggiornamento tomba fallito (HTTP $HTTP_CODE)"
+  fi
+}
+
+delete_grave() {
+  print_header "15. ELIMINA TOMBA (OFFICER)"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima! (Richiede permessi OFFICER)"
+    return
+  fi
+
+  read -p "ID tomba da eliminare: " GRAVE_ID
+  read -p "Sei sicuro? (s/n): " confirm
+
+  if [ "$confirm" != "s" ]; then
+    print_info "Operazione annullata"
+    return
+  fi
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X DELETE "$BASE_URL/graves/$GRAVE_ID" \
+    -H "Authorization: Bearer $TOKEN")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  print_info "Response: $BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "Tomba eliminata con successo!"
+  else
+    print_error "Eliminazione tomba fallita (HTTP $HTTP_CODE)"
+  fi
+}
+
+get_all_messages() {
+  print_header "16. GET TUTTI I MESSAGGI (PAGINATE)"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima! (Richiede permessi OFFICER)"
+    return
+  fi
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$BASE_URL/messages?page=1&limit=10" \
+    -H "Authorization: Bearer $TOKEN")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "Messaggi recuperati con successo"
+  else
+    print_error "Errore nel recupero messaggi (HTTP $HTTP_CODE)"
+  fi
+}
+
+get_my_messages() {
+  print_header "17. GET I MIEI MESSAGGI"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima!"
+    return
+  fi
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$BASE_URL/messages/me?page=1&limit=10" \
+    -H "Authorization: Bearer $TOKEN")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "I tuoi messaggi recuperati con successo"
+  else
+    print_error "Errore nel recupero messaggi (HTTP $HTTP_CODE)"
+  fi
+}
+
+create_message() {
+  print_header "18. CREA NUOVO MESSAGGIO"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima!"
+    return
+  fi
+
+  read -p "Tipo messaggio (notification, request): " MESSAGE_TYPE
+  read -p "Descrizione: " DESCRIPTION
+  read -p "Tipo (maintenance, other): " TYPE
+  read -p "Status (sent, read, archived): " STATUS
+  read -p "ID richiesta ufficio: " REQUEST_OFFICE_ID
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/messages" \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+            \"message_type\": \"$MESSAGE_TYPE\",
+            \"description\": \"$DESCRIPTION\",
+            \"type\": \"$TYPE\",
+            \"status\": \"$STATUS\",
+            \"id_request_office\": $REQUEST_OFFICE_ID
+        }")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 201 ]; then
+    print_success "Messaggio creato con successo!"
+  else
+    print_error "Creazione messaggio fallita (HTTP $HTTP_CODE)"
+  fi
+}
+
+get_all_deceased() {
+  print_header "19. GET TUTTI I DEFUNTI (PAGINATE)"
+
+  if [ -f /tmp/jwt_token.txt ]; then
+    TOKEN=$(cat /tmp/jwt_token.txt)
+  fi
+
+  if [ -z "$TOKEN" ]; then
+    print_error "Devi fare login prima! (Richiede permessi OFFICER)"
+    return
+  fi
+
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$BASE_URL/deceased?page=1&limit=10" \
+    -H "Authorization: Bearer $TOKEN")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+  BODY=$(echo "$RESPONSE" | sed '$d')
+
+  echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    print_success "Defunti recuperati con successo"
+  else
+    print_error "Errore nel recupero defunti (HTTP $HTTP_CODE)"
+  fi
+}
+
 health_check() {
   print_header "0. HEALTH CHECK"
   RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$BASE_URL/health" 2>/dev/null)
@@ -377,8 +671,23 @@ show_menu() {
   echo -e "\n${BLUE}=== ADMIN ===${NC}"
   echo "  8) Lista tutti gli account (OFFICER)"
 
+  echo -e "\n${BLUE}=== TOMBE (GRAVES) ===${NC}"
+  echo " 11) Get tutte le tombe (paginate)"
+  echo " 12) Get tomba per ID"
+  echo " 13) Crea nuova tomba (OFFICER)"
+  echo " 14) Aggiorna tomba (OFFICER)"
+  echo " 15) Elimina tomba (OFFICER)"
+
+  echo -e "\n${BLUE}=== MESSAGGI ===${NC}"
+  echo " 16) Get tutti i messaggi (paginate)"
+  echo " 17) Get i miei messaggi"
+  echo " 18) Crea nuovo messaggio"
+
+  echo -e "\n${BLUE}=== DEFUNTI (DECEASED) ===${NC}"
+  echo " 19) Get tutti i defunti (paginate)"
+
   echo -e "\n${BLUE}=== DIGITAL FLOWERS ===${NC}"
-  echo " 10) Invia fiore digitale PD"
+  echo " 10) Invia fiore digitale"
 
   echo -e "\n${BLUE}=== UTILITY ===${NC}"
   echo "  0) Health check"
@@ -413,6 +722,15 @@ main() {
     8) get_all_accounts ;;
     9) update_profile ;;
     10) send_digital_flower ;;
+    11) get_all_graves ;;
+    12) get_grave_by_id ;;
+    13) create_grave ;;
+    14) update_grave ;;
+    15) delete_grave ;;
+    16) get_all_messages ;;
+    17) get_my_messages ;;
+    18) create_message ;;
+    19) get_all_deceased ;;
     h) continue ;;
     q)
       read -p "Vuoi pulire i file temporanei? (y/n) > " clean

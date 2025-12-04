@@ -1,6 +1,5 @@
 import {
-  forwardRef,
-  Inject,
+  BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,15 +8,17 @@ import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UserRole } from './entities/user_role.entity';
-import { AccountsService } from '../accounts/accounts.service';
+import { Account } from '../accounts/entities/account.entity';
 
 @Injectable()
 export class RolesService {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-    @Inject(forwardRef(() => AccountsService))
-    private accountsService: AccountsService,
+    @InjectRepository(UserRole)
+    private readonly userRoleRepository: Repository<UserRole>,
+    @InjectRepository(Account)
+    private readonly accountRepository: Repository<Account>,
   ) {}
 
   async findAll(): Promise<Role[]> {
@@ -39,19 +40,32 @@ export class RolesService {
     account_id: number,
     role_id: number,
   ): Promise<UserRole> {
-    const alreadyHasRole = (
-      await this.accountsService.findOne(account_id)
-    ).userRoles.some((ur) => ur.role.id === role_id);
-
-    if (alreadyHasRole) {
-      throw new NotFoundException('Role already assigned to the account');
+    const account = await this.accountRepository.findOneBy({ id: account_id });
+    if (!account) {
+      throw new NotFoundException('Account not found');
     }
 
-    const userRole = this.roleRepository.manager.create(UserRole, {
+    const role = await this.roleRepository.findOneBy({ id: role_id });
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+
+    const existingUserRole = await this.userRoleRepository.findOne({
+      where: {
+        account: { id: account_id },
+        role: { id: role_id },
+      },
+    });
+
+    if (existingUserRole) {
+      throw new BadRequestException('Role already assigned to the account');
+    }
+
+    const userRole = this.userRoleRepository.create({
       account: { id: account_id },
       role: { id: role_id },
     });
-    return this.roleRepository.manager.save(userRole);
+    return this.userRoleRepository.save(userRole);
   }
 
   async update(
@@ -66,7 +80,7 @@ export class RolesService {
     await this.roleRepository.delete(id);
   }
   async removeRoleOfAccount(account_id: number): Promise<void> {
-    await this.roleRepository.manager.delete(UserRole, {
+    await this.userRoleRepository.delete({
       account: { id: account_id },
     });
   }

@@ -30,8 +30,8 @@ export class GravesController {
     return this.gravesService.create(creatGravesDto);
   }
 
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(RoleType.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.USER)
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.gravesService.findAll(paginationDto);

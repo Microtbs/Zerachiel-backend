@@ -17,10 +17,6 @@ export class CreateMessageDto {
 
   status: msgStatus;
 
-  @IsNotEmpty()
-  @IsInt()
-  id_sender: number;
-
   @IsInt()
   @IsOptional()
   id_receiver: number;

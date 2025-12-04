@@ -38,7 +38,6 @@ export class MessagesService {
 
     await this.repo.save(message);
 
-    // Reload with relations
     const messageWithRelations = await this.repo.findOne({
       where: { id: message.id },
       relations: ['sender', 'receiver', 'requestOffice'],

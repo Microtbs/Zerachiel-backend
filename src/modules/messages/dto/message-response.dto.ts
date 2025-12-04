@@ -1,8 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { AccountForMessageDTO } from '@@/accounts/dto/account-response.dto';
-/**
- * DTO serializzato via class-transformer per restituire messaggi arricchiti.
- */
+import { RequestOfficeResponseDTO } from '@@/request_offices/dto/request-office-response.dto';
+
 export class MessageResponseDTO {
   @Expose()
   id: number;
@@ -31,5 +30,6 @@ export class MessageResponseDTO {
   receiver?: AccountForMessageDTO;
 
   @Expose()
-  requestOffice: any;
+  @Type(() => RequestOfficeResponseDTO)
+  requestOffice: RequestOfficeResponseDTO;
 }

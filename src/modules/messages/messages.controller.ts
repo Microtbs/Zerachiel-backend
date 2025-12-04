@@ -43,8 +43,8 @@ export class MessagesController {
     return this.messagesService.findByUser(req.user.id, paginationDto);
   }
 
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(RoleType.OFFICER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.OFFICER)
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.messagesService.findAll(paginationDto);

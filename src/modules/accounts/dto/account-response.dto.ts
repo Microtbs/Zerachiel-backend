@@ -1,9 +1,17 @@
+import { Expose } from 'class-transformer';
 import { RoleDTO } from '@@/roles/dto/role-response.dto';
 
 export class AccountForMessageDTO {
+  @Expose()
   id: number;
+
+  @Expose()
   first_name: string;
+
+  @Expose()
   last_name: string;
+
+  @Expose()
   email: string;
 }
 
