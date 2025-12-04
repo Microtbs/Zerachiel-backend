@@ -43,9 +43,6 @@ export class Account {
   @OneToMany(() => DigitalFlower, (flower) => flower.sender)
   digitalFlowers: DigitalFlower[];
 
-  @OneToMany(() => DigitalFlower, (flower) => flower.sender)
-  digitalFlower: DigitalFlower[];
-
   @OneToMany(() => UserRole, (userRole) => userRole.account)
   userRoles: UserRole[];
 }

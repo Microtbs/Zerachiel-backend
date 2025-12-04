@@ -1,7 +1,7 @@
 /**
- * DTO minimale usato all'interno di altre risposte (es. GraveDTO).
+ * DTO minimale usato all'interno di altre risposte (es. GraveDto).
  */
-export class DeceasedDTO {
+export class DeceasedDto {
   first_name: string;
   last_name: string;
 }

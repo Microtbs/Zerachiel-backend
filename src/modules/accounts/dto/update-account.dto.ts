@@ -5,18 +5,21 @@ import {
   IsOptional,
   IsString,
   Length,
+  MinLength,
 } from 'class-validator';
 import { IsStrongPassword } from '@/common/decorators/strong-password';
 
 export class UpdateAccountDto {
   @IsOptional()
   @IsString()
-  @Length(1, 30)
+  @MinLength(2)
+  @Length(2, 30)
   first_name?: string;
 
   @IsOptional()
   @IsString()
-  @Length(1, 30)
+  @MinLength(2)
+  @Length(2, 30)
   last_name?: string;
 
   @IsOptional()
@@ -36,6 +39,7 @@ export class UpdateAccountDto {
 export class UpdateSensitiveDto {
   @IsOptional()
   @IsString()
+  @MinLength(8)
   currentPassword?: string;
 
   @IsOptional()

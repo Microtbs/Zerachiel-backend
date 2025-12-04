@@ -5,7 +5,7 @@ import { Message } from './entities/message.entity';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { plainToInstance } from 'class-transformer';
-import { MessageResponseDTO } from './dto/message-response.dto';
+import { MessageResponseDto } from './dto/message-response.dto';
 import {
   msgStatus,
   msgType,
@@ -52,7 +52,7 @@ export class MessagesService {
 
   async findAll(
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+  ): Promise<PaginatedResponse<MessageResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -62,7 +62,7 @@ export class MessagesService {
       take: limit,
     });
 
-    const data = plainToInstance(MessageResponseDTO, messages, {
+    const data = plainToInstance(MessageResponseDto, messages, {
       excludeExtraneousValues: true,
     });
 
@@ -76,17 +76,16 @@ export class MessagesService {
       },
     };
   }
-
   async findOne(
     id: number,
     message_type?: message_type,
-  ): Promise<MessageResponseDTO> {
+  ): Promise<MessageResponseDto> {
     const message = await this.repo.findOne({
       where: { id, message_type },
       relations: ['sender', 'receiver', 'requestOffice'],
     });
     if (!message) throw new NotFoundException('message not found');
-    return plainToInstance(MessageResponseDTO, message, {
+    return plainToInstance(MessageResponseDto, message, {
       excludeExtraneousValues: true,
     });
   }
@@ -94,7 +93,7 @@ export class MessagesService {
   async findMsgType(
     message_type: message_type,
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+  ): Promise<PaginatedResponse<MessageResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -109,7 +108,7 @@ export class MessagesService {
       throw new NotFoundException(`message ${message_type} not found`);
     }
 
-    const data = plainToInstance(MessageResponseDTO, messages, {
+    const data = plainToInstance(MessageResponseDto, messages, {
       excludeExtraneousValues: true,
     });
 
@@ -127,7 +126,7 @@ export class MessagesService {
   async findByType(
     type: msgType,
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+  ): Promise<PaginatedResponse<MessageResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -142,7 +141,7 @@ export class MessagesService {
       throw new NotFoundException(`message ${type} not found`);
     }
 
-    const data = plainToInstance(MessageResponseDTO, messages, {
+    const data = plainToInstance(MessageResponseDto, messages, {
       excludeExtraneousValues: true,
     });
 
@@ -160,7 +159,7 @@ export class MessagesService {
   async findByStatus(
     status: msgStatus,
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+  ): Promise<PaginatedResponse<MessageResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -175,7 +174,7 @@ export class MessagesService {
       throw new NotFoundException(`message ${status} not found`);
     }
 
-    const data = plainToInstance(MessageResponseDTO, messages, {
+    const data = plainToInstance(MessageResponseDto, messages, {
       excludeExtraneousValues: true,
     });
 
@@ -208,7 +207,7 @@ export class MessagesService {
   async findByUser(
     userId: number,
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<MessageResponseDTO>> {
+  ): Promise<PaginatedResponse<MessageResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -219,7 +218,7 @@ export class MessagesService {
       take: limit,
     });
 
-    const data = plainToInstance(MessageResponseDTO, messages, {
+    const data = plainToInstance(MessageResponseDto, messages, {
       excludeExtraneousValues: true,
     });
 

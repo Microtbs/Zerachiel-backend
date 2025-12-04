@@ -1,9 +1,9 @@
-import { DeceasedDTO } from 'src/modules/deceased/dto/deceased-response.dto';
+import { DeceasedDto } from 'src/modules/deceased/dto/deceased-response.dto';
 
 /**
  * DTO per esporre una tomba insieme ai defunti associati.
  */
-export class GraveDTO {
+export class GraveDto {
   id: number;
-  deceased: DeceasedDTO[];
+  deceased: DeceasedDto[];
 }

@@ -30,8 +30,8 @@ export class DigitalFlowersController {
     return this.service.create(dto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleType.USER)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(RoleType.USER)
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.service.findAll(paginationDto);

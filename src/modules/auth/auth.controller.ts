@@ -2,8 +2,8 @@ import { Controller, Post, Body, Res, Get, Query } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { CreateAccountDto as RegisterDto } from '../accounts/dto/create-account.dto';
 import { LoginDto } from './dto/login.dto';
-import { RecoverPasswordDTO } from './dto/recover-password.dto';
-import { ResetPasswordDTO } from './dto/reset-password.dto';
+import { RecoverPasswordDto } from './dto/recover-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Response } from 'express';
 import { JWT_COOKIE_MAX_AGE_MS } from '@/common/constants/auth.constants';
 
@@ -41,12 +41,12 @@ export class AuthController {
   }
 
   @Post('recoverPassword')
-  recoverPassword(@Body() dto: RecoverPasswordDTO) {
+  recoverPassword(@Body() dto: RecoverPasswordDto) {
     return this.authService.requestPasswordReset(dto.email);
   }
 
   @Post('resetPassword')
-  resetPassword(@Body() dto: ResetPasswordDTO) {
+  resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto.token, dto.newPassword);
   }
 }

@@ -1,36 +1,28 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-  IsDate,
-  IsNumber,
-} from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsInt, MinLength } from 'class-validator';
 
 /**
  * DTO per aggiornare i dati del defunto, compreso lo spostamento su una tomba differente.
  */
 export class UpdateDeceasedDto {
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
-  first_name: string;
+  @MinLength(2)
+  first_name?: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
-  last_name: string;
+  @MinLength(2)
+  last_name?: string;
 
   @IsOptional()
-  @IsNotEmpty()
-  @IsDate()
-  dob: Date;
+  @IsDateString()
+  dob?: string;
 
   @IsOptional()
-  @IsNotEmpty()
-  @IsDate()
-  dod: Date;
+  @IsDateString()
+  dod?: string;
 
   @IsOptional()
-  @IsNumber()
-  grave_id: number;
+  @IsInt()
+  grave_id?: number;
 }

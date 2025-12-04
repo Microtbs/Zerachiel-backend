@@ -6,7 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
-import { CreateRoleDto } from './dto/create-role.dto';
 import { UserRole } from './entities/user_role.entity';
 import { Account } from '../accounts/entities/account.entity';
 
@@ -30,11 +29,6 @@ export class RolesService {
     if (!role) throw new NotFoundException('role not found');
     return role;
   }
-
-  /*async create(createRoleDto: CreateRoleDto): Promise<Role> {
-    const role = this.roleRepository.create(createRoleDto);
-    return this.roleRepository.save(role);
-  }*/
 
   async createRoleofAccount(
     account_id: number,
@@ -66,14 +60,6 @@ export class RolesService {
       role: { id: role_id },
     });
     return this.userRoleRepository.save(userRole);
-  }
-
-  async update(
-    id: number,
-    updateRoleDto: Partial<CreateRoleDto>,
-  ): Promise<Role> {
-    await this.roleRepository.update(id, updateRoleDto);
-    return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {

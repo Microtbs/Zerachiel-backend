@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
-import { RoleDTO } from '@@/roles/dto/role-response.dto';
+import { RoleDto } from '@@/roles/dto/role-response.dto';
 
-export class AccountForMessageDTO {
+export class AccountForMessageDto {
   @Expose()
   id: number;
 
@@ -15,16 +15,16 @@ export class AccountForMessageDTO {
   email: string;
 }
 
-export class SenderDTO {
+export class SenderDto {
   id: number;
   first_name: string;
   last_name: string;
 }
 
-export class AccountResponseDTO {
+export class AccountResponseDto {
   id: number;
   first_name: string;
   last_name: string;
   email: string;
-  roles?: RoleDTO[];
+  roles?: RoleDto[];
 }

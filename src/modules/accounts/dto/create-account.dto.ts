@@ -5,18 +5,21 @@ import {
   IsBoolean,
   IsOptional,
   Length,
+  MinLength,
 } from 'class-validator';
 import { IsStrongPassword } from '@/common/decorators/strong-password';
 
 export class CreateAccountDto {
   @IsNotEmpty()
   @IsString()
-  @Length(1, 30)
+  @MinLength(2)
+  @Length(2, 30)
   first_name: string;
 
-  @Length(1, 30)
   @IsNotEmpty()
   @IsString()
+  @MinLength(2)
+  @Length(2, 30)
   last_name: string;
 
   @IsNotEmpty()
@@ -30,6 +33,7 @@ export class CreateAccountDto {
   tax_code?: string;
 
   @IsStrongPassword()
+  @IsNotEmpty()
   hashed_password: string;
 
   @IsOptional()

@@ -1,13 +1,13 @@
 /**
  * Descrive la forma di un ruolo restituito ai client.
  */
-export class RoleDTO {
+export class RoleDto {
   id: number;
   type: string;
   details?: string;
 }
 
-export class UserRoleDTO {
+export class UserRoleDto {
   id: number;
-  role: RoleDTO;
+  role: RoleDto;
 }

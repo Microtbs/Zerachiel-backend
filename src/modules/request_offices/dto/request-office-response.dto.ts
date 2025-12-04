@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-export class RequestOfficeResponseDTO {
+export class RequestOfficeResponseDto {
   @Expose()
   id: number;
 

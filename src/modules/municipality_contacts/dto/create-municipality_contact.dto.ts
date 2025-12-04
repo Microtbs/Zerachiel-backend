@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, IsInt, MinLength } from 'class-validator';
 
 /**
  * DTO per aggiungere i riferimenti istituzionali di un comune.
@@ -10,12 +10,14 @@ export class CreateMunicipalityContactDto {
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(5)
   telephone: string;
 
   @IsNotEmpty()
   @IsEmail()
   pec: string;
 
+  @IsInt()
   @IsNotEmpty()
   municipality_id: number;
 }

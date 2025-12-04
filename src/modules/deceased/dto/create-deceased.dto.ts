@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsOptional,
   IsInt,
+  MinLength,
 } from 'class-validator';
 
 /**
@@ -12,16 +13,20 @@ import {
 export class CreateDeceasedDto {
   @IsString()
   @IsNotEmpty()
+  @MinLength(2)
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(2)
   lastName: string;
 
   @IsDateString()
+  @IsNotEmpty()
   dob: string;
 
   @IsDateString()
+  @IsNotEmpty()
   dod: string;
 
   @IsOptional()

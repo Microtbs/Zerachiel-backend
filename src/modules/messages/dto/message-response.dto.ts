@@ -1,8 +1,8 @@
 import { Expose, Type } from 'class-transformer';
-import { AccountForMessageDTO } from '@@/accounts/dto/account-response.dto';
-import { RequestOfficeResponseDTO } from '@@/request_offices/dto/request-office-response.dto';
+import { AccountForMessageDto } from '@@/accounts/dto/account-response.dto';
+import { RequestOfficeResponseDto } from '@@/request_offices/dto/request-office-response.dto';
 
-export class MessageResponseDTO {
+export class MessageResponseDto {
   @Expose()
   id: number;
 
@@ -13,7 +13,8 @@ export class MessageResponseDTO {
   description: string;
 
   @Expose()
-  created_at: number;
+  @Type(() => Date)
+  created_at: Date;
 
   @Expose()
   type: string;
@@ -22,14 +23,14 @@ export class MessageResponseDTO {
   status: string;
 
   @Expose()
-  @Type(() => AccountForMessageDTO)
-  sender: AccountForMessageDTO;
+  @Type(() => AccountForMessageDto)
+  sender: AccountForMessageDto;
 
   @Expose()
-  @Type(() => AccountForMessageDTO)
-  receiver?: AccountForMessageDTO;
+  @Type(() => AccountForMessageDto)
+  receiver?: AccountForMessageDto;
 
   @Expose()
-  @Type(() => RequestOfficeResponseDTO)
-  requestOffice: RequestOfficeResponseDTO;
+  @Type(() => RequestOfficeResponseDto)
+  requestOffice: RequestOfficeResponseDto;
 }

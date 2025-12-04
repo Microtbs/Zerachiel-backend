@@ -1,12 +1,12 @@
 import { Account } from '../entities/account.entity';
 import {
-  AccountResponseDTO,
-  AccountForMessageDTO,
-  SenderDTO,
+  AccountResponseDto,
+  AccountForMessageDto,
+  SenderDto,
 } from '../dto/account-response.dto';
 
 export class AccountMapper {
-  static toResponse(account: Account): AccountResponseDTO {
+  static toResponse(account: Account): AccountResponseDto {
     return {
       id: account.id,
       first_name: account.first_name,
@@ -19,11 +19,11 @@ export class AccountMapper {
     };
   }
 
-  static toResponseList(accounts: Account[]): AccountResponseDTO[] {
+  static toResponseList(accounts: Account[]): AccountResponseDto[] {
     return accounts.map((account) => this.toResponse(account));
   }
 
-  static toMessageDto(account: Account): AccountForMessageDTO {
+  static toMessageDto(account: Account): AccountForMessageDto {
     return {
       id: account.id,
       first_name: account.first_name,
@@ -32,7 +32,7 @@ export class AccountMapper {
     };
   }
 
-  static toSenderDto(account: Account): SenderDTO {
+  static toSenderDto(account: Account): SenderDto {
     return {
       id: account.id,
       first_name: account.first_name,

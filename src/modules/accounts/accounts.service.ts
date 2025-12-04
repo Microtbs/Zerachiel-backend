@@ -9,12 +9,12 @@ import { Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto, UpdateSensitiveDto } from './dto/update-account.dto';
-import { AccountResponseDTO } from './dto/account-response.dto';
+import { AccountResponseDto } from './dto/account-response.dto';
 import { AccountMapper } from './mappers/account.mapper';
 import * as bcrypt from 'bcrypt';
 import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
-import { BCRYPT_ROUNDS } from '../../common/constants/auth.constants';
+import { BCRYPT_ROUNDS } from '@/common/constants/auth.constants';
 
 @Injectable()
 export class AccountsService {
@@ -29,7 +29,7 @@ export class AccountsService {
 
   async findAll(
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<AccountResponseDTO>> {
+  ): Promise<PaginatedResponse<AccountResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -58,7 +58,7 @@ export class AccountsService {
     return account;
   }
 
-  async getRoleOfAccount(id: number): Promise<AccountResponseDTO> {
+  async getRoleOfAccount(id: number): Promise<AccountResponseDto> {
     const account = await this.repo.findOne({
       where: { id },
       relations: ['userRoles', 'userRoles.role'],
@@ -138,7 +138,7 @@ export class AccountsService {
   async update(
     id: number,
     updateAccountDto: UpdateAccountDto,
-  ): Promise<AccountResponseDTO> {
+  ): Promise<AccountResponseDto> {
     const account = await this.repo.findOneBy({ id });
     if (!account) throw new NotFoundException('Account not found');
     await this.repo.save({ id, ...updateAccountDto });

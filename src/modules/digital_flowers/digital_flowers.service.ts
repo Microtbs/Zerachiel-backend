@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { DigitalFlower } from './entities/digital_flower.entity';
 import { CreateDigitalFlowersDto } from './dto/create-digital_flower.dto';
 import { UpdateDigitalFlowersDto } from './dto/update-digital_flower.dto';
-import { DigitalFlowerResponseDTO } from './dto/digital_flower-response.dto';
+import { DigitalFlowerResponseDto } from './dto/digital_flower-response.dto';
 import { PaginationDto } from '@@/pagination/dto/pagination.dto';
 import { PaginatedResponse } from '@@/pagination/interfaces/paginated-response.interface';
 
@@ -17,7 +17,7 @@ export class DigitalFlowersService {
 
   async findAll(
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResponse<DigitalFlowerResponseDTO>> {
+  ): Promise<PaginatedResponse<DigitalFlowerResponseDto>> {
     const { page = 1, limit = 20 } = paginationDto;
     const skip = (page - 1) * limit;
 
@@ -27,7 +27,7 @@ export class DigitalFlowersService {
       take: limit,
     });
 
-    const data: DigitalFlowerResponseDTO[] = digitalFlowers.map((flower) => ({
+    const data: DigitalFlowerResponseDto[] = digitalFlowers.map((flower) => ({
       id: flower.id,
       type: flower.type,
       created_at: flower.createdAt,
