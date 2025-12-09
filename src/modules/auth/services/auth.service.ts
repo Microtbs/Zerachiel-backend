@@ -10,10 +10,7 @@ import { CreateAccountDto as RegisterDto } from '../../accounts/dto/create-accou
 import { LoginDto } from '../dto/login.dto';
 import { RoleType } from '@/common/enums/role.enums';
 import { ROLE_PRIORITY } from '@/common/constants/role-priority.constants';
-import {
-  BCRYPT_ROUNDS,
-  DEFAULT_USER_ROLE_ID,
-} from '../../../common/constants/auth.constants';
+import { DEFAULT_USER_ROLE_ID } from '../../../common/constants/auth.constants';
 import { MailService } from '../../mail/mail.service';
 import { RolesService } from '../../roles/roles.service';
 import { VerificationTokenService } from '../services/verification-token.service';

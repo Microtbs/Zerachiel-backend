@@ -2,6 +2,7 @@
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Conferma registrazione</title>
     <style>
       body {
         background-color: #f6f6f6;
@@ -35,15 +36,27 @@
         margin-bottom: 20px;
       }
       .token-box {
-        background: #fff7d9;
-        border-left: 4px solid #f2c94c;
+        background: #f0f7ff;
+        border-left: 4px solid #2f80ed;
         padding: 12px 15px;
         font-size: 18px;
         font-weight: bold;
         text-align: center;
         letter-spacing: 1px;
-        color: #b88700;
+        color: #2f80ed;
         margin-bottom: 25px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        background-color: #2f80ed;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0 auto;
+        text-align: center;
       }
       .footer {
         text-align: center;
@@ -59,19 +72,27 @@
         <img src='https://i.imgur.com/ysCR4Rg.png' width='70' alt='logo' />
       </div>
 
-      <div class='title'>Recupera la tua password</div>
+      <div class='title'>Benvenuto!</div>
 
       <p class='text'>
-        Abbiamo ricevuto una richiesta per reimpostare la tua password.
-        Inserisci questo codice nel modulo di recupero:
+        Grazie per esserti registrato. Per completare la verifica dell’account
+        puoi usare il codice qui sotto:
       </p>
 
       <div class='token-box'>
         {{token}}
       </div>
 
+      <p class='text' style='text-align: center;'>
+        Oppure puoi confermare rapidamente tramite il pulsante:
+      </p>
+
+      <div style='text-align: center; margin-bottom: 20px;'>
+        <a class='btn' href='{{verifyUrl}}'>Conferma registrazione</a>
+      </div>
+
       <div class='footer'>
-        Se non hai richiesto il recupero, puoi ignorare questa email.
+        Se non hai richiesto questo account, puoi ignorare questa email.
       </div>
     </div>
   </body>

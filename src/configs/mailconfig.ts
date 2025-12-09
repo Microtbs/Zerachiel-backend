@@ -1,5 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { MailerOptions } from '@nestjs-modules/mailer';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 /**
  * Factory centralizzata per creare le opzioni del MailerModule.
@@ -20,6 +22,13 @@ export class MailConfig {
       },
       defaults: {
         from: config.get<string>('MAIL_FROM'),
+      },
+      template: {
+        dir: join(__dirname, '../modules/mail/templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
       },
     };
   }

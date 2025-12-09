@@ -26,7 +26,7 @@ export class MailService {
         to: email,
         from: this.fromAddress,
         subject: 'Conferma la tua registrazione',
-        template: './templates/verification',
+        template: 'ver',
         context: {
           token,
           verifyUrl,
@@ -47,7 +47,7 @@ export class MailService {
         to: email,
         from: this.fromAddress,
         subject: 'Recupera la tua password',
-        template: './templates/recover',
+        template: 'recover',
         context: {
           token,
         },

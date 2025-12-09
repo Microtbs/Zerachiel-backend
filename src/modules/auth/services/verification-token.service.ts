@@ -47,7 +47,7 @@ export class VerificationTokenService {
     await this.tokenRepository.delete({ email, type });
 
     // Hash password before storing in verification token for security
-    let processedAccountData = accountData || null;
+    const processedAccountData = accountData || null;
     if (processedAccountData && processedAccountData.hashed_password) {
       processedAccountData.hashed_password = await bcrypt.hash(
         processedAccountData.hashed_password,
