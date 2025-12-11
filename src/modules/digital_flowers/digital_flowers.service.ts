@@ -65,7 +65,6 @@ export class DigitalFlowersService {
   async create(dto: CreateDigitalFlowersDto): Promise<DigitalFlower> {
     const flower = this.repo.create({
       type: dto.type,
-      createdAt: dto.duration,
       sender: { id: dto.account_id },
       grave: { id: dto.grave_id },
     });

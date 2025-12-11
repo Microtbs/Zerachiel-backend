@@ -35,7 +35,8 @@ print_divider() {
 register_user() {
   print_header "1. REGISTRAZIONE NUOVO UTENTE"
 
-  RANDOM_EMAIL="test$(date +%s)@example.com"
+  # RANDOM_EMAIL="test$(date +%s)@example.com"
+  RANDOM_EMAIL="ciworib376@lawior.com"
 
   RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/auth/register" \
     -H "Content-Type: application/json" \
@@ -46,6 +47,8 @@ register_user() {
             \"hashed_password\": \"Test1234!\",
             \"family_member\": false
         }")
+
+  # \"email\": \"$RANDOM_EMAIL\",
 
   HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
   BODY=$(echo "$RESPONSE" | sed '$d')
